@@ -12,7 +12,7 @@ import Comment from "./Comment";
 import { useAuth } from "../context/AuthProvider";
 // import { useProfileImage } from "../context/ProfileImageContext";
 
-const Upload = ({ upload, setupload }) => {
+const Upload = ({ posts, setupload }) => {
   // const { username } = useData();
   const [menuePostId, setMenuePostId] = useState(null);
   const [commentmenue, setcommentmenue] = useState(null);
@@ -20,9 +20,9 @@ const Upload = ({ upload, setupload }) => {
   const { session } = useAuth;
   return (
     <div>
-      {upload && (
+      {posts && (
         <div className="w-xl">
-          {upload?.map((item, index) => (
+          {posts?.map((post, index) => (
             <div
               key={index}
               className="mt-5 bg-white rounded-md px-3 py-3 shadow-2xl"
@@ -32,8 +32,8 @@ const Upload = ({ upload, setupload }) => {
                   <IoPersonCircle className="text-3xl" />
 
                   <div>
-                    <h3>{item.username}</h3>
-                    {formatDistanceToNow(item.id, {
+                    <h3>{post.profile?.usernsme}</h3>
+                    {formatDistanceToNow(post.id, {
                       addSuffix: true,
                     })}
                   </div>
@@ -45,12 +45,12 @@ const Upload = ({ upload, setupload }) => {
                 </div>
               </div>
               <div className="mt-5 px-4 flex flex-col gap-5">
-                <p>{item.text}</p>
+                <p>{post.caption}</p>
                 <div>
                   <div
-                    className={`grid  gap-3 px-5 mt-3 ${item.images.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}
+                    className={`grid  gap-3 px-5 mt-3 ${post.images.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}
                   >
-                    {item.images?.map((media, index) => (
+                    {post.images?.map((media, index) => (
                       <div key={index} className="w-full ">
                         {media.file.type.startsWith("image/") && (
                           <img
@@ -73,13 +73,13 @@ const Upload = ({ upload, setupload }) => {
               </div>
               {/* likes & Comment */}
               <div className="flex items-center justify-between">
-                {item.likes.length > 0 ? (
+                {post.likes.length > 0 ? (
                   <button
-                    onClick={() => setMenuePostId(item.id)}
+                    onClick={() => setMenuePostId(post.id)}
                     className="cursor-pointer flex items-center gap-1 px-7 mt-3"
                   >
                     <span className="text-gray-500 text-xl">
-                      {item.likes.length}
+                      {post.likes.length}
                     </span>
                     <AiFillLike className="text-blue-500 text-2xl" />
                   </button>
@@ -87,12 +87,12 @@ const Upload = ({ upload, setupload }) => {
                   <div></div>
                 )}
                 <div>
-                  {item.rightcomment.length > 0 && (
+                  {post.rightcomment.length > 0 && (
                     <button
-                      onClick={() => setcommentmenue(item.id)}
+                      onClick={() => setcommentmenue(post.id)}
                       className="cursor-pointer flex items-center gap-1 px-7 mt-3"
                     >
-                      <span>{item.rightcomment.length} Comment</span>
+                      <span>{post.rightcomment.length} Comment</span>
                     </button>
                   )}
                 </div>
@@ -103,7 +103,7 @@ const Upload = ({ upload, setupload }) => {
                   onClick={() => {
                     setupload((prev) =>
                       prev.map((post) => {
-                        if (post.id !== item.id) return post;
+                        if (post.id !== post.id) return post;
                         const alredyliked = post.likes.includes(session);
                         return {
                           ...post,
@@ -117,20 +117,20 @@ const Upload = ({ upload, setupload }) => {
                   }}
                   className="flex active:scale-95 items-center hover:bg-[#b0b3b8] transition-all duration-200 gap-2 px-8 py-1 rounded-md cursor-pointer"
                 >
-                  {item.liked ? (
+                  {post.liked ? (
                     <AiFillLike className="text-2xl text-blue-500 " />
                   ) : (
                     <AiOutlineLike className=" text-2xl " />
                   )}
                   <p
-                    className={`text-xl ${item.liked ? "text-blue-500" : null}`}
+                    className={`text-xl ${post.liked ? "text-blue-500" : null}`}
                   >
                     Like
                   </p>
                 </div>
                 <div
                   onClick={() => {
-                    setcommentmenue(item.id);
+                    setcommentmenue(post.id);
                   }}
                   className="flex items-center gap-2 cursor-pointer"
                 >
@@ -140,7 +140,7 @@ const Upload = ({ upload, setupload }) => {
               </div>
               {/* menue */}
               <div>
-                {menuePostId === item.id && (
+                {menuePostId === post.id && (
                   <div
                     onClick={() => setMenuePostId(null)}
                     className="fixed z-50 bg-[#282830e8]/50 inset-0  "
@@ -153,7 +153,7 @@ const Upload = ({ upload, setupload }) => {
                         <div className="flex justify-between items-center">
                           <div className="flex  items-center justify-center gap-1">
                             <span className="text-gray-500 text-xl">
-                              {item.likes.length}
+                              {post.likes.length}
                             </span>
                             <AiFillLike className="text-2xl  text-blue-500" />
                           </div>
@@ -163,7 +163,7 @@ const Upload = ({ upload, setupload }) => {
                             className="text-3xl bg-gray-600 rounded-4xl text-white cursor-pointer "
                           />
                         </div>
-                        {item.likes.map((user, index) => (
+                        {post.likes.map((user, index) => (
                           <div
                             key={index}
                             className="mt-10 flex items-center justify-between gap-3  overflow-y-auto"
@@ -180,9 +180,9 @@ const Upload = ({ upload, setupload }) => {
               </div>
               {/* Comments */}
               <div>
-                {commentmenue === item.id && (
+                {commentmenue === post.id && (
                   <Comment
-                    item={item}
+                    item={post}
                     setcommentmenue={setcommentmenue}
                     setMenuePostId={setMenuePostId}
                     menuePostId={menuePostId}

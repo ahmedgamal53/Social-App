@@ -220,7 +220,6 @@ const Profile = () => {
 
       {/* posts */}
       <PostsUser />
-      <Home />
     </div>
   );
 };

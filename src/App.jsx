@@ -18,7 +18,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
             <Route path="home" element={<Home />} />
-            <Route path="profile" element={<Profile />} />
+            <Route path="profile/:id" element={<Profile />} />
             <Route path="notifications" element={<Notifications />} />
           </Route>
         </Route>

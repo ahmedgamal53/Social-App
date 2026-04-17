@@ -1,0 +1,109 @@
+import { IoPerson } from "react-icons/io5";
+import { formatDistanceToNow } from "date-fns";
+import { BsThreeDots } from "react-icons/bs";
+import { FaRegCommentAlt } from "react-icons/fa";
+import { AiOutlineLike } from "react-icons/ai";
+import { AiFillLike } from "react-icons/ai";
+import { IoCloseSharp } from "react-icons/io5";
+import { IoPersonCircle } from "react-icons/io5";
+import { useAuth } from "../context/AuthProvider";
+import { useState } from "react";
+
+const UserPosts = ({ posts }) => {
+  const [menuePostId, setMenuePostId] = useState(null);
+
+  const { profile } = useAuth();
+  return (
+    <div>
+      <div className="w-xl">
+        {posts?.map((post, index) => (
+          <div
+            key={index}
+            className="mt-5 bg-white rounded-md px-3 py-3 shadow-2xl"
+          >
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                {profile?.avatar_url ? (
+                  <img
+                    src={post.profiles?.avatar_url}
+                    className="size-15 object-cover mb-3 rounded-full w-[50px] h-[50px]   "
+                  />
+                ) : (
+                  <IoPersonCircle className="text-3xl w-[50px] h-[50px]" />
+                )}{" "}
+                <div>
+                  <h3>{post.profiles?.username}</h3>
+                  <span>
+                    {formatDistanceToNow(post.id, { addSuffix: true })}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <button>
+                  <BsThreeDots className="text-3xl cursor-pointer" />
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-5 px-4 flex flex-col gap-5">
+              <p>{post.caption}</p>
+              <div>
+                {/* <div
+                  className={`grid  gap-3 px-5 mt-3 ${post.images.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}
+                >
+                  {post.images?.map((media, index) => (
+                    <div key={index} className="w-full ">
+                      {media.file.type.startsWith("image/") && (
+                        <img
+                          src={media.url}
+                          className="rounded-md  min-w-full"
+                          alt=""
+                        />
+                      )}
+                      {media.file.type.startsWith("video/") && (
+                        <video
+                          src={media.url}
+                          controls
+                          className="rounded-md w-full"
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div> */}
+
+                {/* likes & Comment */}
+                <div className="flex items-center justify-between">
+                  {post.likes.length > 0 ? (
+                    <button
+                      onClick={() => setMenuePostId(post.id)}
+                      className="cursor-pointer flex items-center gap-1 px-7 mt-3"
+                    >
+                      <span className="text-gray-500 text-xl">
+                        {post.likes.length}
+                      </span>
+                      <AiFillLike className="text-blue-500 text-2xl" />
+                    </button>
+                  ) : (
+                    <div></div>
+                  )}
+                  <div>
+                    {/* {post.rightcomment.length > 0 && (
+                    <button
+                      onClick={() => setcommentmenue(post.id)}
+                      className="cursor-pointer flex items-center gap-1 px-7 mt-3"
+                    >
+                      <span>{post.rightcomment.length} Comment</span>
+                    </button>
+                  )} */}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default UserPosts;
