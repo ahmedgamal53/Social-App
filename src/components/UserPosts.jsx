@@ -16,9 +16,9 @@ const UserPosts = ({ posts }) => {
   return (
     <div>
       <div className="w-xl">
-        {posts?.map((post, index) => (
+        {posts?.map((post) => (
           <div
-            key={index}
+            key={post.id}
             className="mt-5 bg-white rounded-md px-3 py-3 shadow-2xl"
           >
             <div className="flex justify-between items-center">
@@ -48,32 +48,38 @@ const UserPosts = ({ posts }) => {
             <div className="mt-5 px-4 flex flex-col gap-5">
               <p>{post.caption}</p>
               <div>
-                {/* <div
-                  className={`grid  gap-3 px-5 mt-3 ${post.images.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}
+                <div
+                  className={`grid  gap-3 px-5 mt-3 ${post.images?.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}
                 >
-                  {post.images?.map((media, index) => (
-                    <div key={index} className="w-full ">
-                      {media.file.type.startsWith("image/") && (
-                        <img
-                          src={media.url}
-                          className="rounded-md  min-w-full"
-                          alt=""
-                        />
-                      )}
-                      {media.file.type.startsWith("video/") && (
-                        <video
-                          src={media.url}
-                          controls
-                          className="rounded-md w-full"
-                        />
-                      )}
-                    </div>
-                  ))}
-                </div> */}
+                  {post.images?.map((url, index) => {
+                    const isVideo = url.match(/\.(mp4|webm|ogg)$/i);
+
+                    return (
+                      <div key={index} className="w-full">
+                        {isVideo ? (
+                          <video
+                            key={index}
+                            src={url}
+                            controls
+                            className="rounded-md w-full"
+                          />
+                        ) : (
+                          <img
+                            key={index}
+                            src={url}
+                            loading="lazy"
+                            className="rounded-md min-w-full"
+                            alt=""
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
 
                 {/* likes & Comment */}
                 <div className="flex items-center justify-between">
-                  {post.likes.length > 0 ? (
+                  {/* {post.likes.length > 0 ? (
                     <button
                       onClick={() => setMenuePostId(post.id)}
                       className="cursor-pointer flex items-center gap-1 px-7 mt-3"
@@ -85,17 +91,7 @@ const UserPosts = ({ posts }) => {
                     </button>
                   ) : (
                     <div></div>
-                  )}
-                  <div>
-                    {/* {post.rightcomment.length > 0 && (
-                    <button
-                      onClick={() => setcommentmenue(post.id)}
-                      className="cursor-pointer flex items-center gap-1 px-7 mt-3"
-                    >
-                      <span>{post.rightcomment.length} Comment</span>
-                    </button>
                   )} */}
-                  </div>
                 </div>
               </div>
             </div>

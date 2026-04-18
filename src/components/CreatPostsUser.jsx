@@ -7,18 +7,25 @@ import { IoPersonCircle } from "react-icons/io5";
 import { FaXmark } from "react-icons/fa6";
 import { FaImages } from "react-icons/fa";
 
-import Upload from "../components/Upload";
 import { BeatLoader } from "react-spinners";
-import { useUserPosts } from "../api/posts/Posts";
+import { useInsertPost, useUserPosts } from "../api/posts/Posts";
 import UserPosts from "./UserPosts";
-const PostsUser = () => {
+import { supabase } from "../supabaseClient.js";
+const CreatPostUser = () => {
   const { data: posts } = useUserPosts();
   console.log(posts);
-  const { loading, profile } = useAuth();
+
+  // const { data: postlikes } = usePostLikes(posts.id);
+
+  const { mutate: insertPost } = useInsertPost();
+
+  const { loading, profile, setloading } = useAuth();
   const [menue, setmenue] = useState(false);
   const [preview, setpreview] = useState([]);
   const [inputvalue, setinputvalue] = useState("");
-  const [upload, setupload] = useState([]);
+  // const [upload, setupload] = useState([]);
+  // const [loadinginset, setloadinginset] = useState(false);
+
   const fileinputref = useRef();
 
   const handelclick = () => {
@@ -35,26 +42,48 @@ const PostsUser = () => {
     e.target.value = "";
   };
 
+  const uploadImages = async (files) => {
+    const uploadPromises = files.map(async (file) => {
+      const fileName = `${Date.now()}-${file.name}`;
+      await supabase.storage.from("posts").upload(fileName, file, {
+        contentType: file.type,
+      });
+      const { data } = supabase.storage.from("posts").getPublicUrl(fileName);
+
+      return data.publicUrl;
+    });
+    const results = await Promise.all(uploadPromises);
+    return results.filter(Boolean);
+  };
+
   const handelupload = async () => {
     if (!inputvalue.trim() && preview.length === 0) return;
+    try {
+      setloading(true);
+      const files = preview.map((p) => p.file);
+      const imageUrls = await uploadImages(files);
 
-    setupload((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        username: null,
-        text: inputvalue,
-        images: [...preview],
-        liked: false,
-        comment: false,
-        likes: [],
-        rightcomment: [],
-      },
-    ]);
-    setinputvalue("");
-    setpreview([]);
-    setmenue(false);
+      insertPost({ caption: inputvalue, images: imageUrls });
+    } catch (error) {
+      console.log(error);
+      setloading(false);
+    } finally {
+      setloading(false);
+      setinputvalue("");
+      setpreview([]);
+      setmenue(false);
+    }
   };
+
+  // if (loadinginset) {
+  //   return (
+  //     <div className="fixed flex justify-center items-center h-screen inset-0 bg-black/10">
+  //       <div className="">
+  //         <BeatLoader color="#3498db" size={15} />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div>
@@ -172,7 +201,10 @@ const PostsUser = () => {
                       {/* upload */}
                       <button
                         onClick={handelupload}
-                        disabled={!inputvalue.trim() && preview.length === 0}
+                        disabled={
+                          (!inputvalue.trim() && preview.length === 0) ||
+                          loading
+                        }
                         className={`text-white hover:bg-blue-400 cursor-pointer  bg-blue-500 mx-5 rounded-md my-5 py-2  disabled:cursor-no-drop disabled:bg-[#3b3d3e]    disabled:opacity-80`}
                       >
                         Upload
@@ -185,6 +217,12 @@ const PostsUser = () => {
           </div>
           {/* <Upload upload={upload} setupload={setupload} /> */}
           <div>
+            {/* {posts?.map((post) => (
+              <div key={post.id}>
+                <div>{post.caption}</div>
+                <span>{post.profiles?.username}</span>
+              </div>
+            ))} */}
             <UserPosts posts={posts} />
           </div>
         </div>
@@ -199,4 +237,4 @@ const PostsUser = () => {
   );
 };
 
-export default PostsUser;
+export default CreatPostUser;

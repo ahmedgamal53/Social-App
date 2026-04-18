@@ -10,7 +10,7 @@ import { BeatLoader } from "react-spinners";
 import { IoClose } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
 import Home from "./Home.jsx";
-import PostsUser from "../components/PostsUser.jsx";
+import CreatPostUser from "../components/CreatPostsUser.jsx";
 const Profile = () => {
   const fileinputref = useRef();
   const { session, setprofile, profile } = useAuth();
@@ -201,7 +201,7 @@ const Profile = () => {
       {profile?.avatar_url && viewPecture && (
         <div
           onClick={() => setviewPecture(false)}
-          className="fixed flex justify-center items-center h-screen inset-0 bg-black/50 drop-shadow-2xl"
+          className="fixed flex justify-center items-center h-screen inset-0 z-50 bg-black/50 drop-shadow-2xl"
         >
           <div
             onClick={(e) => e.stopPropagation()}
@@ -219,7 +219,7 @@ const Profile = () => {
       )}
 
       {/* posts */}
-      <PostsUser />
+      <CreatPostUser />
     </div>
   );
 };

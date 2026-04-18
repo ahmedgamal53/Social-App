@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../../supabaseClient.js";
 import { useAuth } from "../../context/AuthProvider.jsx";
 export const useUserPosts = () => {
@@ -7,24 +7,25 @@ export const useUserPosts = () => {
 
   return useQuery({
     queryKey: ["posts", id],
+    enabled: !!id,
     queryFn: async () => {
-      if (!id) return null;
       const { data, error } = await supabase
         .from("posts")
         .select(
           `
-    id,
-    caption,
-    images,
-    created_at,
-    likes,
-    commint,
-    user_id,
-    profiles (
-      username,
-      avatar_url
-    )
-  `,
+  id,
+  caption,
+  images,
+  created_at,
+  user_id,
+  profiles (
+    username,
+    avatar_url
+  ),
+  post_likes_count:post_likes(count),
+  post_likes_users:post_likes(user_id),
+  comments(count)
+`,
         )
         .eq("user_id", id)
         .order("created_at", { ascending: false });
@@ -56,6 +57,34 @@ export const usePostLikes = (postId) => {
         .eq("post_id", postId);
       if (error) throw new Error(error.message);
       return data;
+    },
+  });
+};
+
+export const useInsertPost = () => {
+  const { session } = useAuth();
+  const id = session?.user.id;
+  const queryClient = useQueryClient();
+  return useMutation({
+    async mutationFn(data) {
+      if (!id) return null;
+
+      const { data: newpost, error } = await supabase
+        .from("posts")
+        .insert({
+          caption: data.caption,
+          images: data.images,
+          user_id: id,
+        })
+        .select()
+        .single();
+      if (error) {
+        throw new Error(error.message);
+      }
+      return newpost;
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
 };
