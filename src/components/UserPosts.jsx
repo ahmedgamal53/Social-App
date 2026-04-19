@@ -1,5 +1,4 @@
 import { IoPerson } from "react-icons/io5";
-import { formatDistanceToNow } from "date-fns";
 import { BsThreeDots } from "react-icons/bs";
 import { FaRegCommentAlt } from "react-icons/fa";
 import { AiOutlineLike } from "react-icons/ai";
@@ -7,12 +6,14 @@ import { AiFillLike } from "react-icons/ai";
 import { IoCloseSharp } from "react-icons/io5";
 import { IoPersonCircle } from "react-icons/io5";
 import { useAuth } from "../context/AuthProvider";
-import { useState } from "react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import ButtomLike from "./ButtomLike.jsx";
+dayjs.extend(relativeTime);
 
 const UserPosts = ({ posts }) => {
-  const [menuePostId, setMenuePostId] = useState(null);
-
   const { profile } = useAuth();
+
   return (
     <div>
       <div className="w-xl">
@@ -33,9 +34,7 @@ const UserPosts = ({ posts }) => {
                 )}{" "}
                 <div>
                   <h3>{post.profiles?.username}</h3>
-                  <span>
-                    {formatDistanceToNow(post.id, { addSuffix: true })}
-                  </span>
+                  <span>{dayjs(post.created_at).fromNow()}</span>
                 </div>
               </div>
               <div>
@@ -78,20 +77,13 @@ const UserPosts = ({ posts }) => {
                 </div>
 
                 {/* likes & Comment */}
-                <div className="flex items-center justify-between">
-                  {/* {post.likes.length > 0 ? (
-                    <button
-                      onClick={() => setMenuePostId(post.id)}
-                      className="cursor-pointer flex items-center gap-1 px-7 mt-3"
-                    >
-                      <span className="text-gray-500 text-xl">
-                        {post.likes.length}
-                      </span>
-                      <AiFillLike className="text-blue-500 text-2xl" />
-                    </button>
-                  ) : (
-                    <div></div>
-                  )} */}
+                <div className=" flex justify-around mt-5">
+                  <ButtomLike post={post} />
+
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    <FaRegCommentAlt className="text-2xl" />
+                    <p>Comment</p>
+                  </div>
                 </div>
               </div>
             </div>

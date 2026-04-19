@@ -44,7 +44,8 @@ const CreatPostUser = () => {
 
   const uploadImages = async (files) => {
     const uploadPromises = files.map(async (file) => {
-      const fileName = `${Date.now()}-${file.name}`;
+      const ext = file.type.split("/")[1] || "mp4";
+      const fileName = `posts/${Date.now()}-${crypto.randomUUID()}.${ext}`;
       await supabase.storage.from("posts").upload(fileName, file, {
         contentType: file.type,
       });

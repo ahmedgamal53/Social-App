@@ -171,7 +171,7 @@ const Home = () => {
               </div>
             )}
           </div>
-          <Upload posts={posts} setupload={setupload} />
+          {/* <Upload posts={posts} setupload={setupload} /> */}
         </div>
       ) : (
         <div className="fixed flex justify-center items-center h-screen inset-0 bg-black/10">

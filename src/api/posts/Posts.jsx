@@ -23,8 +23,10 @@ export const useUserPosts = () => {
     avatar_url
   ),
   post_likes_count:post_likes(count),
-  post_likes_users:post_likes(user_id),
-  comments(count)
+    post_likes:post_likes(
+    user_id
+  ),
+    comments(count)
 `,
         )
         .eq("user_id", id)
