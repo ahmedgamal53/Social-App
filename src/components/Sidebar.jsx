@@ -60,7 +60,7 @@ const Sidebar = () => {
             </ul>
             <ul>
               <NavLink
-                to={`profile/${profile.id}`}
+                to={`/profile/${profile.id}`}
                 className={({ isActive }) =>
                   `${isActive ? "bg-blue-300" : null} flex items-center gap-3 text-white text-xl rounded-md px-2 py-1`
                 }

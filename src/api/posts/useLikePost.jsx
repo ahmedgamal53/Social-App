@@ -24,6 +24,7 @@ export const useLikePost = () => {
     },
     async onSuccess() {
       await queryClient.invalidateQueries({ queryKey: ["posts"] });
+      await queryClient.invalidateQueries({ queryKey: ["post_likes"] });
     },
   });
 };

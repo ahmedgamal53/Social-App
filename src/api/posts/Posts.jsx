@@ -1,10 +1,41 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../../supabaseClient.js";
 import { useAuth } from "../../context/AuthProvider.jsx";
-export const useUserPosts = () => {
-  const { session } = useAuth();
-  const id = session?.user.id;
 
+export const usePosts = () => {
+  return useQuery({
+    queryKey: ["posts"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select(
+          `
+  id,
+  caption,
+  images,
+  created_at,
+  user_id,
+  profiles (
+    username,
+    avatar_url
+  ),
+  post_likes_count:post_likes(count),
+    post_likes:post_likes(
+    user_id
+  ),
+    comments(count)
+`,
+        )
+        .order("created_at", { ascending: false });
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data;
+    },
+  });
+};
+
+export const useUserPosts = (id) => {
   return useQuery({
     queryKey: ["posts", id],
     enabled: !!id,
@@ -50,13 +81,15 @@ export const usePostLikes = (postId) => {
           `
             id,
           user_id,
+          post_id,
           profiles (
             username,
             avatar_url
           )
                 `,
         )
-        .eq("post_id", postId);
+        .in("post_id", postId);
+
       if (error) throw new Error(error.message);
       return data;
     },

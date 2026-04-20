@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthProvider";
 import { FaImages } from "react-icons/fa";
 import { IoPersonCircle } from "react-icons/io5";
@@ -11,15 +11,39 @@ import { IoClose } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
 import Home from "./Home.jsx";
 import CreatPostUser from "../components/CreatPostsUser.jsx";
+import { useParams } from "react-router-dom";
 const Profile = () => {
+  const { id } = useParams();
+
   const fileinputref = useRef();
-  const { session, setprofile, profile } = useAuth();
+  const { session, setprofile, profile: currentUser } = useAuth();
   const [menu, setmenu] = useState(false);
-  // const [avatar, setAvatar] = useState(null);
+
+  const [profileData, setProfileData] = useState(null);
+
   const [uploading, setUploading] = useState(false);
   const [viewPecture, setviewPecture] = useState(false);
   const [editeUserName, setediteUserName] = useState(false);
-  const [inputusername, setinputusername] = useState(profile?.username);
+  const [inputusername, setinputusername] = useState();
+
+  const isOwner = currentUser?.id === id;
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (!error) {
+        setProfileData(data);
+        setinputusername(data?.username);
+      }
+    };
+    if (id) fetchProfile();
+  }, [id]);
+
   const handelchange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -43,6 +67,7 @@ const Profile = () => {
         ...prev,
         avatar_url: imageUrl,
       }));
+      setProfileData((prev) => ({ ...prev, avatar_url: imageUrl }));
     } catch (error) {
       console.log(error);
       setUploading(false);
@@ -58,9 +83,10 @@ const Profile = () => {
   };
 
   const handelPecture = () => {
-    if (profile?.avatar_url) {
+    if (profileData?.avatar_url) {
       setviewPecture(true);
     }
+
     setmenu(false);
   };
 
@@ -70,13 +96,13 @@ const Profile = () => {
 
   const canseledite = () => {
     setediteUserName(false);
-    setinputusername(profile?.username);
+    setinputusername(profileData?.username);
   };
 
   const handelSaveUsername = async () => {
     if (!inputusername.trim()) {
       setediteUserName(false);
-      setinputusername(profile?.username);
+      setinputusername(profileData?.username);
       return;
     }
     try {
@@ -91,6 +117,7 @@ const Profile = () => {
       }
 
       setprofile((prev) => ({ ...prev, username: inputusername }));
+      setProfileData((prev) => ({ ...prev, username: inputusername }));
     } catch (error) {
       console.log(error);
       setediteUserName(false);
@@ -107,31 +134,34 @@ const Profile = () => {
             <div
               onClick={handelmenue}
               disabled={uploading}
-              className="  cursor-pointer"
+              className={isOwner ? "cursor-pointer" : ""}
             >
-              {profile?.avatar_url ? (
+              {profileData?.avatar_url ? (
                 <img
-                  src={profile.avatar_url}
+                  src={profileData.avatar_url}
                   className="size-15 object-cover mb-3 rounded-full w-[100px] h-[100px]   "
                 />
               ) : (
                 <IoPersonCircle className="text-3xl w-[100px] h-[100px]" />
               )}
-              <div className="rounded-2xl absolute  bottom-1 left-0 bg-[#2f2d2d] w-[30px] h-[30px] text-white  flex justify-center items-center p-2 ">
-                <FaCamera />
-              </div>
+              {isOwner && (
+                <div className="rounded-2xl absolute bottom-1 left-0 bg-[#2f2d2d] w-[30px] h-[30px] flex justify-center items-center p-2">
+                  <FaCamera />
+                </div>
+              )}
             </div>
             <div className="">
-              {menu && (
+              {isOwner && menu && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className=" icon absolute flex flex-col gap-2 bg-[#252728]  justify-center item p-2 rounded-md w-[250px] "
+                  className="absolute flex flex-col gap-2 bg-[#252728] p-2 rounded-md w-[250px]"
                 >
-                  <div className="flex  items-center gap-2  cursor-pointer font-bold ">
+                  <div
+                    className="flex items-center gap-2 cursor-pointer font-bold"
+                    onClick={handelPecture}
+                  >
                     <BsPersonBadge className="text-xl" />
-                    <div onClick={handelPecture}>
-                      <span>View profile picture</span>
-                    </div>
+                    <span>View profile picture</span>
                   </div>
                   <input
                     type="file"
@@ -142,7 +172,7 @@ const Profile = () => {
                   />
                   <div
                     onClick={() => fileinputref.current.click()}
-                    className="flex cursor-pointer  items-center gap-2 font-bold "
+                    className="flex cursor-pointer items-center gap-2 font-bold"
                   >
                     <HiMiniPhoto className="text-xl" />
                     <span>Choosing a profile picture</span>
@@ -152,7 +182,7 @@ const Profile = () => {
             </div>
           </div>
           <div>
-            {editeUserName ? (
+            {isOwner && editeUserName ? (
               <div className="flex  flex-col gap-2 items-center">
                 <input
                   value={inputusername}
@@ -177,19 +207,21 @@ const Profile = () => {
                 </div>
               </div>
             ) : (
-              <h2 className="text-white absolute">{profile?.username}</h2>
+              <h2 className="text-white absolute">{profileData?.username}</h2>
             )}
           </div>
         </div>
-        <div
-          onClick={handelEdite}
-          className="text-white flex justify-center items-center gap-2 bg-[#3B3D3E] px-3 py-2 rounded-md cursor-pointer"
-        >
-          Edite profile
-          <span>
-            <MdEdit />
-          </span>
-        </div>
+        {isOwner && (
+          <div
+            onClick={handelEdite}
+            className="text-white flex justify-center items-center gap-2 bg-[#3B3D3E] px-3 py-2 rounded-md cursor-pointer"
+          >
+            Edite profile
+            <span>
+              <MdEdit />
+            </span>
+          </div>
+        )}
       </div>
       {uploading ? (
         <div className="fixed flex justify-center items-center h-screen inset-0 bg-black/10">
@@ -198,7 +230,7 @@ const Profile = () => {
           </div>
         </div>
       ) : null}
-      {profile?.avatar_url && viewPecture && (
+      {profileData?.avatar_url && viewPecture && (
         <div
           onClick={() => setviewPecture(false)}
           className="fixed flex justify-center items-center h-screen inset-0 z-50 bg-black/50 drop-shadow-2xl"
@@ -207,7 +239,7 @@ const Profile = () => {
             onClick={(e) => e.stopPropagation()}
             className="w-5xl flex gap-5 relative"
           >
-            <img className="rounded-md" src={profile.avatar_url} alt="" />
+            <img className="rounded-md" src={profileData?.avatar_url} alt="" />
             <div
               onClick={() => setviewPecture(false)}
               className=" z-10 absolute right-0 text-4xl cursor-pointer text-gray-400"
@@ -219,7 +251,7 @@ const Profile = () => {
       )}
 
       {/* posts */}
-      <CreatPostUser />
+      <CreatPostUser id={id} />
     </div>
   );
 };

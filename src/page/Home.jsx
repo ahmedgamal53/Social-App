@@ -8,9 +8,11 @@ import { FaXmark } from "react-icons/fa6";
 import Upload from "../components/Upload";
 import { BeatLoader } from "react-spinners";
 import { useAuth } from "../context/AuthProvider";
-import { useUserPosts } from "../api/posts/Posts";
+import { usePosts } from "../api/posts/Posts";
+import UserPosts from "../components/UserPosts";
 const Home = () => {
-  const { data: posts } = useUserPosts();
+  const { data: allPosts } = usePosts();
+  console.log("allPosts", allPosts);
 
   const { loading } = useAuth();
   const [menue, setmenue] = useState(false);
@@ -172,6 +174,7 @@ const Home = () => {
             )}
           </div>
           {/* <Upload posts={posts} setupload={setupload} /> */}
+          <UserPosts posts={allPosts} />
         </div>
       ) : (
         <div className="fixed flex justify-center items-center h-screen inset-0 bg-black/10">

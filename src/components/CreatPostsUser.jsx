@@ -11,11 +11,9 @@ import { BeatLoader } from "react-spinners";
 import { useInsertPost, useUserPosts } from "../api/posts/Posts";
 import UserPosts from "./UserPosts";
 import { supabase } from "../supabaseClient.js";
-const CreatPostUser = () => {
-  const { data: posts } = useUserPosts();
-  console.log(posts);
-
-  // const { data: postlikes } = usePostLikes(posts.id);
+const CreatPostUser = ({ id }) => {
+  const { data: userPosts } = useUserPosts(id);
+  console.log(userPosts);
 
   const { mutate: insertPost } = useInsertPost();
 
@@ -23,10 +21,10 @@ const CreatPostUser = () => {
   const [menue, setmenue] = useState(false);
   const [preview, setpreview] = useState([]);
   const [inputvalue, setinputvalue] = useState("");
-  // const [upload, setupload] = useState([]);
-  // const [loadinginset, setloadinginset] = useState(false);
 
   const fileinputref = useRef();
+
+  const isOwner = profile?.id === id;
 
   const handelclick = () => {
     fileinputref.current.click();
@@ -76,39 +74,31 @@ const CreatPostUser = () => {
     }
   };
 
-  // if (loadinginset) {
-  //   return (
-  //     <div className="fixed flex justify-center items-center h-screen inset-0 bg-black/10">
-  //       <div className="">
-  //         <BeatLoader color="#3498db" size={15} />
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   return (
     <div>
       {!loading ? (
         <div className="m-5 ml-15   flex justify-center items-center flex-col ">
-          <div>
-            <div className="bg-white shadow-2xl rounded-md w-xl   ">
-              <h3 className="border-b-2 mb-3 py-3 px-4 border-gray-300 font-semibold text-xl ">
-                Create Post
-              </h3>
+          {isOwner && (
+            <div>
+              <div className="bg-white shadow-2xl rounded-md w-xl   ">
+                <h3 className="border-b-2 mb-3 py-3 px-4 border-gray-300 font-semibold text-xl ">
+                  Create Post
+                </h3>
 
-              <div className="flex items-center justify-between relative">
-                <TbMessageDots className="absolute left-4 text-xl text-gray-500 " />
-                <input
-                  onClick={() => setmenue(true)}
-                  type="text"
-                  disabled={menue}
-                  placeholder="What's on your mind?"
-                  className="bg-gray-100 cursor-pointer border-2 w-full m-3 px-7 py-1  outline-none border-gray-300 rounded-md"
-                />
-                <IoMdSend className="absolute right-4 text-xl text-gray-500 cursor-pointer" />
+                <div className="flex items-center justify-between relative">
+                  <TbMessageDots className="absolute left-4 text-xl text-gray-500 " />
+                  <input
+                    onClick={() => setmenue(true)}
+                    type="text"
+                    disabled={menue}
+                    placeholder="What's on your mind?"
+                    className="bg-gray-100 cursor-pointer border-2 w-full m-3 px-7 py-1  outline-none border-gray-300 rounded-md"
+                  />
+                  <IoMdSend className="absolute right-4 text-xl text-gray-500 cursor-pointer" />
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* show menue */}
           <div>
@@ -216,15 +206,8 @@ const CreatPostUser = () => {
               </div>
             )}
           </div>
-          {/* <Upload upload={upload} setupload={setupload} /> */}
           <div>
-            {/* {posts?.map((post) => (
-              <div key={post.id}>
-                <div>{post.caption}</div>
-                <span>{post.profiles?.username}</span>
-              </div>
-            ))} */}
-            <UserPosts posts={posts} />
+            <UserPosts posts={userPosts} />
           </div>
         </div>
       ) : (

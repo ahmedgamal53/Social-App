@@ -13,9 +13,8 @@ const ButtomLike = ({ post }) => {
       : [];
 
   const isLiked = likesArray.some((like) => like.user_id === session?.user?.id);
-  console.log(`Likes:${post.post_likes?.user_id === session?.user.id}`);
-  console.log(session?.user.id);
-  console.log("from post", post.post_likes?.user_id);
+
+  console.log(post.post_likes_count?.[0]?.count);
 
   console.log(post);
 
