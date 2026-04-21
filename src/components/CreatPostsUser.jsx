@@ -207,7 +207,7 @@ const CreatPostUser = ({ id }) => {
             )}
           </div>
           <div>
-            <UserPosts posts={userPosts} />
+            <UserPosts id={id} posts={userPosts} />
           </div>
         </div>
       ) : (

@@ -9,16 +9,23 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import ButtomLike from "./ButtomLike.jsx";
 import { useMemo, useState } from "react";
-import { usePostLikes } from "../api/posts/Posts.jsx";
+import { useDeletePost, usePostLikes } from "../api/posts/Posts.jsx";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider.jsx";
+import { PostgrestError } from "@supabase/supabase-js";
 dayjs.extend(relativeTime);
 
-const UserPosts = ({ posts }) => {
+const UserPosts = ({ posts, id }) => {
   const navigate = useNavigate();
+  const { profile } = useAuth();
+
+  const { mutate: deletepost } = useDeletePost();
+
   const postId = useMemo(() => posts?.map((post) => post.id), [posts]);
   const { data: postLikes } = usePostLikes(postId);
   const [mnueLikes, setmnueLikes] = useState(null);
-
+  const [buttomdelete, setbuttomdelete] = useState(null);
+  // const [mnuebuttomdelete, setmnuebuttomdelete] = useState(false);
   console.log("postLikes", postLikes);
 
   console.log(
@@ -29,6 +36,7 @@ const UserPosts = ({ posts }) => {
   );
   console.log("mnueLikes", mnueLikes);
 
+  const isOwner = profile?.id === id;
   return (
     <div>
       <div className="w-xl">
@@ -39,23 +47,69 @@ const UserPosts = ({ posts }) => {
           >
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-3">
-                {post.profiles?.avatar_url ? (
-                  <img
-                    src={post.profiles?.avatar_url}
-                    className="size-15 object-cover mb-3 rounded-full w-[50px] h-[50px]   "
-                  />
-                ) : (
-                  <IoPersonCircle className="text-3xl w-[50px] h-[50px]" />
-                )}{" "}
+                <div
+                  className=" cursor-pointer "
+                  onClick={() => {
+                    navigate(`/profile/${post.user_id}`);
+                    window.scrollTo({
+                      behavior: "smooth",
+                      top: 0,
+                    });
+                  }}
+                >
+                  {post.profiles?.avatar_url ? (
+                    <img
+                      src={post.profiles?.avatar_url}
+                      className="size-15 object-cover mb-3 rounded-full w-[50px] h-[50px]   "
+                    />
+                  ) : (
+                    <IoPersonCircle className="text-3xl w-[50px] h-[50px]" />
+                  )}
+                </div>
                 <div>
-                  <h3>{post.profiles?.username}</h3>
+                  <h3
+                    className="hover:underline duration-200 cursor-pointer "
+                    onClick={() => {
+                      navigate(`/profile/${post.user_id}`);
+                      window.scrollTo({
+                        behavior: "smooth",
+                        top: 0,
+                      });
+                    }}
+                  >
+                    {post.profiles?.username}
+                  </h3>
                   <span>{dayjs(post.created_at).fromNow()}</span>
                 </div>
               </div>
               <div>
-                <button>
-                  <BsThreeDots className="text-3xl cursor-pointer" />
-                </button>
+                {isOwner && (
+                  <div className="flex flex-col justify-center items-center">
+                    <span
+                      onClick={() => {
+                        setbuttomdelete(post.id);
+                      }}
+                    >
+                      <BsThreeDots className="text-3xl cursor-pointer" />
+                    </span>
+                    {buttomdelete === post.id && (
+                      <div className="flex  gap-5 items-center bg-gray-300/50 px-1 py-3 rounded-md">
+                        <div
+                          onClick={() => setbuttomdelete(null)}
+                          className="cursor-pointer hover:bg-gray-400/40 duration-300 px-2 py-1 rounded-md"
+                        >
+                          Cancel
+                        </div>
+                        <div
+                          onClick={() => deletepost(post.id)}
+                          className="bg-red-500 text-white rounded-md px-2 cursor-pointer"
+                        >
+                          Delete
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
             <div className="mt-5 px-4 flex flex-col gap-5">
@@ -154,20 +208,31 @@ const UserPosts = ({ posts }) => {
                               >
                                 {like.profiles?.avatar_url ? (
                                   <img
+                                    onClick={() => {
+                                      navigate(`/profile/${like.user_id}`);
+                                      window.scrollTo({
+                                        behavior: "smooth",
+                                        top: 0,
+                                      });
+                                    }}
                                     src={like.profiles?.avatar_url}
-                                    className="size-15 object-cover mb-3 rounded-full w-[50px] h-[50px]   "
+                                    className="size-15 cursor-pointer object-cover mb-3 rounded-full w-[50px] h-[50px]   "
                                   />
                                 ) : (
                                   <IoPersonCircle className="text-3xl w-[60px] h-[60px]" />
                                 )}{" "}
-                                <a
-                                  onClick={() =>
-                                    navigate(`/profile/${like.user_id}`)
-                                  }
+                                <span
+                                  onClick={() => {
+                                    navigate(`/profile/${like.user_id}`);
+                                    window.scrollTo({
+                                      behavior: "smooth",
+                                      top: 0,
+                                    });
+                                  }}
                                   className="text-white hover:underline cursor-pointer duration-200"
                                 >
                                   {like.profiles.username}
-                                </a>
+                                </span>
                               </div>
                             );
                           })}
