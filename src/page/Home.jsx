@@ -8,17 +8,18 @@ import { FaXmark } from "react-icons/fa6";
 import Upload from "../components/Upload";
 import { BeatLoader } from "react-spinners";
 import { useAuth } from "../context/AuthProvider";
-import { usePosts } from "../api/posts/Posts";
+import { useInsertPost, usePosts } from "../api/posts/Posts";
 import UserPosts from "../components/UserPosts";
+import { supabase } from "../supabaseClient.js";
 const Home = () => {
   const { data: allPosts } = usePosts();
   console.log("allPosts", allPosts);
+  const { mutate: insertPost } = useInsertPost();
 
-  const { loading } = useAuth();
+  const { loading, profile, setloading } = useAuth();
   const [menue, setmenue] = useState(false);
   const [preview, setpreview] = useState([]);
   const [inputvalue, setinputvalue] = useState("");
-  const [upload, setupload] = useState([]);
   const fileinputref = useRef();
 
   const handelclick = () => {
@@ -35,25 +36,37 @@ const Home = () => {
     e.target.value = "";
   };
 
+  const uploadImages = async (files) => {
+    const uploadPromises = files.map(async (file) => {
+      const ext = file.type.split("/")[1] || "mp4";
+      const fileName = `posts/${Date.now()}-${crypto.randomUUID()}.${ext}`;
+      await supabase.storage.from("posts").upload(fileName, file, {
+        contentType: file.type,
+      });
+      const { data } = supabase.storage.from("posts").getPublicUrl(fileName);
+      return data.publicUrl;
+    });
+    const results = await Promise.all(uploadPromises);
+    return results.filter(Boolean);
+  };
+
   const handelupload = async () => {
     if (!inputvalue.trim() && preview.length === 0) return;
+    try {
+      setloading(true);
+      const files = preview.map((p) => p.file);
+      const imageUrls = await uploadImages(files);
 
-    setupload((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        username: null,
-        text: inputvalue,
-        images: [...preview],
-        liked: false,
-        comment: false,
-        likes: [],
-        rightcomment: [],
-      },
-    ]);
-    setinputvalue("");
-    setpreview([]);
-    setmenue(false);
+      insertPost({ caption: inputvalue, images: imageUrls });
+    } catch (error) {
+      console.log(error);
+      setloading(false);
+    } finally {
+      setloading(false);
+      setinputvalue("");
+      setpreview([]);
+      setmenue(false);
+    }
   };
 
   return (
@@ -100,9 +113,18 @@ const Home = () => {
                     </h3>
                     <div className="mt-5 px-3 py-3 text-white flex items-center gap-3">
                       <div>
-                        <IoPersonCircle className="text-3xl" />
+                        {profile?.avatar_url ? (
+                          <img
+                            src={profile.avatar_url}
+                            className="size-15 object-cover mb-3 rounded-full w-[100px] h-[100px]   "
+                          />
+                        ) : (
+                          <IoPersonCircle className="text-3xl w-[100px] h-[100px]" />
+                        )}{" "}
                       </div>
-                      username
+                      <div className="text-xl font-semibold ">
+                        {profile?.username}
+                      </div>
                     </div>
                     <div className="flex flex-col min-h-[200px]">
                       <input
