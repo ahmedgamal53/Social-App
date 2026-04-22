@@ -8,7 +8,7 @@ import { AiFillLike } from "react-icons/ai";
 import { useState } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { IoPersonCircle } from "react-icons/io5";
-import Comment from "./Comment";
+// import Comment from "./Comment";
 import { useAuth } from "../context/AuthProvider";
 // import { useProfileImage } from "../context/ProfileImageContext";
 

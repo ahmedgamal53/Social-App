@@ -13,6 +13,7 @@ import { useDeletePost, usePostLikes } from "../api/posts/Posts.jsx";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider.jsx";
 import { PostgrestError } from "@supabase/supabase-js";
+import Comments from "./Comments.jsx";
 dayjs.extend(relativeTime);
 
 const UserPosts = ({ posts, id }) => {
@@ -25,7 +26,7 @@ const UserPosts = ({ posts, id }) => {
   const { data: postLikes } = usePostLikes(postId);
   const [mnueLikes, setmnueLikes] = useState(null);
   const [buttomdelete, setbuttomdelete] = useState(null);
-  // const [mnuebuttomdelete, setmnuebuttomdelete] = useState(false);
+  const [commentmenue, setcommentmenue] = useState(false);
   console.log("postLikes", postLikes);
 
   console.log(
@@ -165,7 +166,10 @@ const UserPosts = ({ posts, id }) => {
                 <div className=" flex justify-around mt-5">
                   <ButtomLike post={post} />
 
-                  <div className="flex items-center gap-2 cursor-pointer">
+                  <div
+                    onClick={() => setcommentmenue(post.id)}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
                     <FaRegCommentAlt className="text-2xl" />
                     <p>Comment</p>
                   </div>
@@ -240,6 +244,17 @@ const UserPosts = ({ posts, id }) => {
                     </div>
                   </div>
                 </div>
+              )}
+            </div>
+            <div>
+              {commentmenue === post.id && (
+                <Comments
+                  postLikes={postLikes}
+                  setmnueLikes={setmnueLikes}
+                  mnueLikes={mnueLikes}
+                  setcommentmenue={setcommentmenue}
+                  post={post}
+                />
               )}
             </div>
           </div>
