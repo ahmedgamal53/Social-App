@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider.jsx";
 import { PostgrestError } from "@supabase/supabase-js";
 import Comments from "./Comments.jsx";
+import { useComment } from "../api/posts/Comment.jsx";
 dayjs.extend(relativeTime);
 
 const UserPosts = ({ posts, id }) => {
@@ -24,6 +25,9 @@ const UserPosts = ({ posts, id }) => {
 
   const postId = useMemo(() => posts?.map((post) => post.id), [posts]);
   const { data: postLikes } = usePostLikes(postId);
+
+  const { data: comment } = useComment(postId);
+
   const [mnueLikes, setmnueLikes] = useState(null);
   const [buttomdelete, setbuttomdelete] = useState(null);
   const [commentmenue, setcommentmenue] = useState(false);
@@ -147,7 +151,7 @@ const UserPosts = ({ posts, id }) => {
 
                 {/* likes & Comment */}
 
-                <div className="">
+                <div className="flex justify-between items-center">
                   {post.post_likes_count?.[0]?.count > 0 && (
                     <div>
                       <button
@@ -159,6 +163,14 @@ const UserPosts = ({ posts, id }) => {
                         </span>
                         <AiFillLike className="text-blue-500 text-2xl" />
                       </button>
+                    </div>
+                  )}
+                  {post.comments?.[0]?.count > 0 && (
+                    <div
+                      onClick={() => setcommentmenue(post.id)}
+                      className="hover:underline cursor-pointer"
+                    >
+                      {post.comments?.[0]?.count} comment
                     </div>
                   )}
                 </div>
@@ -249,6 +261,7 @@ const UserPosts = ({ posts, id }) => {
             <div>
               {commentmenue === post.id && (
                 <Comments
+                  usecomment={comment}
                   postLikes={postLikes}
                   setmnueLikes={setmnueLikes}
                   mnueLikes={mnueLikes}

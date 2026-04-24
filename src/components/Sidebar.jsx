@@ -8,12 +8,11 @@ import { FiLogOut } from "react-icons/fi";
 import { RiNotificationFill } from "react-icons/ri";
 import { useAuth } from "../context/AuthProvider";
 import { supabase } from "../supabaseClient.js";
-// import { useData } from "../context/Datauser";
-// import { useProfileImage } from "../context/ProfileImageContext";
+import { useNotifications } from "../api/posts/Notifications.jsx";
 
 const Sidebar = () => {
-  // const { username } = useData();
-  // const { profileImage } = useProfileImage();
+  const { data: notifications } = useNotifications();
+  const unreadCount = notifications?.filter((n) => !n.is_read).length;
   const { profile, loading } = useAuth();
 
   console.log("INSIDE COMPONENT:", profile);
@@ -60,7 +59,7 @@ const Sidebar = () => {
             </ul>
             <ul>
               <NavLink
-                to={`/profile/${profile.id}`}
+                to={`/profile/${profile?.id}`}
                 className={({ isActive }) =>
                   `${isActive ? "bg-blue-300" : null} flex items-center gap-3 text-white text-xl rounded-md px-2 py-1`
                 }
@@ -76,7 +75,14 @@ const Sidebar = () => {
                   `${isActive ? "bg-blue-300" : null} flex items-center gap-3 text-white text-xl rounded-md px-2 py-1`
                 }
               >
-                <RiNotificationFill />
+                <div className="relative">
+                  <RiNotificationFill />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                      {unreadCount}
+                    </span>
+                  )}
+                </div>
                 <li>Notifications</li>
               </NavLink>
             </ul>

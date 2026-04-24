@@ -9,6 +9,8 @@ import ButtomLike from "./ButtomLike";
 import { useAuth } from "../context/AuthProvider";
 import { useState } from "react";
 import { IoSendSharp } from "react-icons/io5";
+import { useInsertComment } from "../api/posts/Comment";
+import { useInsertNotification } from "../api/posts/Notifications";
 dayjs.extend(relativeTime);
 
 const Comments = ({
@@ -17,11 +19,39 @@ const Comments = ({
   setmnueLikes,
   mnueLikes,
   postLikes,
+  usecomment,
 }) => {
   console.log("postLikesfromcomment", postLikes);
-  const { profile } = useAuth();
+
+  console.log("commit", usecomment);
+  console.log("commit length", post.comments?.[0]?.count);
+
+  const { mutate: insertcomment } = useInsertComment();
+
+  const { mutate: insertNotification } = useInsertNotification();
+
+  const { profile, session } = useAuth();
   const navigate = useNavigate();
   const [commint, setcommint] = useState("");
+
+  const handelsend = () => {
+    if (!commint.trim()) return;
+    try {
+      insertcomment({ content: commint, post_id: post.id });
+      if (post.user_id !== session.user.id) {
+        insertNotification({
+          user_id: post.user_id,
+          sender_id: session.user.id,
+          post_id: post.id,
+          type: "comment",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setcommint("");
+    }
+  };
   return (
     <div
       onClick={() => setcommentmenue(null)}
@@ -41,7 +71,7 @@ const Comments = ({
             className="text-3xl bg-gray-600 rounded-4xl text-white cursor-pointer "
           />
           <span className="text-white text-2xl">
-            {post.profiles?.username}'post
+            {post.profiles?.username}'s post
           </span>
           <div></div>
         </div>
@@ -120,8 +150,8 @@ const Comments = ({
         </div>
         {/* likes & Comment */}
 
-        <div className="my-5">
-          <div className="">
+        <div className="my-5 ">
+          <div className="flex justify-between px-5">
             {post.post_likes_count?.[0]?.count > 0 && (
               <div className="mx-2">
                 <button
@@ -135,6 +165,7 @@ const Comments = ({
                 </button>
               </div>
             )}
+            <div>{post.comments.count > 0 && <div>ahmed</div>}</div>
           </div>
 
           <div className=" flex justify-around mt-5">
@@ -145,6 +176,55 @@ const Comments = ({
               <p>Comment</p>
             </div>
           </div>
+        </div>
+        {/* comments */}
+        <div>
+          {usecomment
+            .filter((comments) => comments.post_id === post.id)
+            .map((comment, index) => {
+              return (
+                <div className="m-5" key={index}>
+                  <div className="flex gap-5">
+                    {comment.profiles?.avatar_url ? (
+                      <img
+                        onClick={() => {
+                          navigate(`/profile/${comment.user_id}`);
+                          window.scrollTo({
+                            behavior: "smooth",
+                            top: 0,
+                          });
+                        }}
+                        src={comment.profiles?.avatar_url}
+                        className="size-15 cursor-pointer object-cover mb-3 rounded-full w-[50px] h-[50px]   "
+                        alt=""
+                      />
+                    ) : (
+                      <div>
+                        {" "}
+                        <IoPersonCircle className="text-3xl w-[60px] h-[60px]" />
+                      </div>
+                    )}
+                    <div className="flex flex-col bg-[#3f3f3f] rounded-xl px-4">
+                      <span
+                        onClick={() => {
+                          navigate(`/profile/${comment.user_id}`);
+                          window.scrollTo({
+                            behavior: "smooth",
+                            top: 0,
+                          });
+                        }}
+                        className="text-white hover:underline cursor-pointer duration-200"
+                      >
+                        {comment.profiles.username}
+                      </span>
+                      <span className="text-white text-xl">
+                        {comment.content}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
         </div>
 
         {/* inputcommint */}
@@ -161,9 +241,13 @@ const Comments = ({
             value={commint}
             onChange={(e) => setcommint(e.target.value)}
           />
-          <div>
-            <IoSendSharp className="text-blue-500 text-2xl" />
-          </div>
+          <button
+            onClick={handelsend}
+            disabled={!commint.trim()}
+            className="text-blue-500 cursor-pointer text-2xl disabled:text-blue-200 disabled:cursor-no-drop"
+          >
+            <IoSendSharp />
+          </button>
         </div>
 
         {/* menuLikes */}

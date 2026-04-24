@@ -1,11 +1,12 @@
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { useAuth } from "../context/AuthProvider";
 import { useLikePost } from "../api/posts/useLikePost";
+import { useInsertNotification } from "../api/posts/Notifications";
 
 const ButtomLike = ({ post }) => {
   const { session } = useAuth();
   const { mutate: likepost } = useLikePost();
-
+  const { mutate: insertNotification } = useInsertNotification();
   const likesArray = Array.isArray(post.post_likes)
     ? post.post_likes
     : post.post_likes
@@ -18,9 +19,21 @@ const ButtomLike = ({ post }) => {
 
   console.log(post);
 
+  const handelLike = () => {
+    likepost({ postId: post.id, isLiked });
+    if (!isLiked && post.user_id !== session.user.id) {
+      insertNotification({
+        user_id: post.user_id,
+        sender_id: session.user.id,
+        post_id: post.id,
+        type: "like",
+      });
+    }
+  };
+
   return (
     <div
-      onClick={() => likepost({ postId: post.id, isLiked })}
+      onClick={handelLike}
       className="flex active:scale-95 items-center hover:bg-[#b0b3b8] transition-all duration-200 gap-2 px-8 py-1 rounded-md cursor-pointer"
     >
       {isLiked ? (

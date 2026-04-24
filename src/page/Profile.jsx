@@ -216,7 +216,7 @@ const Profile = () => {
             onClick={handelEdite}
             className="text-white flex justify-center items-center gap-2 bg-[#3B3D3E] px-3 py-2 rounded-md cursor-pointer"
           >
-            Edite profile
+            Edit profile
             <span>
               <MdEdit />
             </span>
