@@ -11,7 +11,7 @@ import { useInsertPost, usePosts } from "../api/posts/Posts";
 import UserPosts from "../components/UserPosts";
 import { supabase } from "../supabaseClient.js";
 import { FaSearch } from "react-icons/fa";
-
+import imageCompression from "browser-image-compression";
 const Home = () => {
   const { data: allPosts, isLoading } = usePosts();
   const { mutate: insertPost } = useInsertPost();
@@ -39,14 +39,35 @@ const Home = () => {
 
   const uploadImages = async (files) => {
     const uploadPromises = files.map(async (file) => {
-      const ext = file.type.split("/")[1] || "mp4";
+      let finalFile = file;
+      let ext = file.type.split("/")[1] || "mp4";
+      let contentType = file.type;
+
+      if (file.type.startsWith("image/")) {
+        const options = {
+          maxSizeMB: 0.8,
+          maxWidthOrHeight: 1200,
+          useWebWorker: true,
+          fileType: "image/webp",
+        };
+
+        const compressed = await imageCompression(file, options);
+        finalFile = compressed;
+        ext = "webp";
+        contentType = "image/webp";
+      }
+
       const fileName = `posts/${Date.now()}-${crypto.randomUUID()}.${ext}`;
-      await supabase.storage.from("posts").upload(fileName, file, {
-        contentType: file.type,
+
+      await supabase.storage.from("posts").upload(fileName, finalFile, {
+        contentType: contentType,
       });
+
       const { data } = supabase.storage.from("posts").getPublicUrl(fileName);
+
       return data.publicUrl;
     });
+
     const results = await Promise.all(uploadPromises);
     return results.filter(Boolean);
   };

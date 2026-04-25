@@ -12,6 +12,7 @@ import { MdEdit } from "react-icons/md";
 import Home from "./Home.jsx";
 import CreatPostUser from "../components/CreatPostsUser.jsx";
 import { useParams } from "react-router-dom";
+import imageCompression from "browser-image-compression";
 const Profile = () => {
   const { id } = useParams();
 
@@ -50,9 +51,20 @@ const Profile = () => {
 
     try {
       setUploading(true);
-      const filename = `${session.user.id}-${Date.now()}`;
+      const options = {
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 800,
+        useWebWorker: true,
+        fileType: "image/webp",
+      };
 
-      await supabase.storage.from("avatars").upload(filename, file);
+      const compressedFile = await imageCompression(file, options);
+
+      const filename = `${session.user.id}-${Date.now()}.webp`;
+
+      await supabase.storage.from("avatars").upload(filename, compressedFile, {
+        contentType: "image/webp",
+      });
 
       const { data } = supabase.storage.from("avatars").getPublicUrl(filename);
 
@@ -250,7 +262,7 @@ const Profile = () => {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-5xl flex gap-5 relative"
+            className="w-3xl flex gap-5 relative "
           >
             <img className="rounded-md" src={profileData?.avatar_url} alt="" />
             <div
