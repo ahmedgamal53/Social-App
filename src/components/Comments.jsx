@@ -132,7 +132,10 @@ const Comments = ({
               const isVideo = url.match(/\.(mp4|webm|ogg)$/i);
 
               return (
-                <div key={index} className="w-full">
+                <div
+                  key={index}
+                  className=" flex justify-center items-center w-2xl mx-auto"
+                >
                   {isVideo ? (
                     <video src={url} controls className="rounded-xl w-full" />
                   ) : (
