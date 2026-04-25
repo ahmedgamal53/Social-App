@@ -11,6 +11,8 @@ import { useState } from "react";
 import { IoSendSharp } from "react-icons/io5";
 import { useInsertComment } from "../api/posts/Comment";
 import { useInsertNotification } from "../api/posts/Notifications";
+import { IoPersonCircle } from "react-icons/io5";
+
 dayjs.extend(relativeTime);
 
 const Comments = ({
