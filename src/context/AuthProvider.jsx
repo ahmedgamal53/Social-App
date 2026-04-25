@@ -72,7 +72,6 @@ const AuthProvider = ({ children }) => {
         setsession,
         profile,
         setloading,
-        // isAdmin: profile?.group === "ADMIN",
       }}
     >
       {children}
