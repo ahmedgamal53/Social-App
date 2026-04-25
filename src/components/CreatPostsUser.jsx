@@ -80,21 +80,20 @@ const CreatPostUser = ({ id }) => {
         <div className="m-5 ml-15   flex justify-center items-center flex-col ">
           {isOwner && (
             <div>
-              <div className="bg-white shadow-2xl rounded-md w-xl   ">
-                <h3 className="border-b-2 mb-3 py-3 px-4 border-gray-300 font-semibold text-xl ">
+              <div className="bg-white/80 backdrop-blur-xl shadow-md border border-gray-200 rounded-2xl w-xl">
+                <h3 className="border-b border-gray-200 py-3 px-4 font-semibold text-[18px] text-gray-800">
                   Create Post
                 </h3>
 
-                <div className="flex items-center justify-between relative">
-                  <TbMessageDots className="absolute left-4 text-xl text-gray-500 " />
+                <div className="flex items-center relative px-3 py-3">
+                  <TbMessageDots className="absolute left-5 text-lg text-gray-600" />
                   <input
                     onClick={() => setmenue(true)}
                     type="text"
-                    disabled={menue}
                     placeholder="What's on your mind?"
-                    className="bg-gray-100 cursor-pointer border-2 w-full m-3 px-7 py-1  outline-none border-gray-300 rounded-md"
+                    className="w-full bg-gray-50 border border-gray-200 pl-10 pr-10 py-2 outline-none rounded-xl text-sm text-gray-700 placeholder-gray-400 cursor-pointer "
                   />
-                  <IoMdSend className="absolute right-4 text-xl text-gray-500 cursor-pointer" />
+                  <IoMdSend className="absolute right-5 text-3xl cursor-pointer text-blue-500 bg-white/90  backdrop-blur-md p-1 rounded-full shadow-md hover:scale-105 transition-all duration-200" />{" "}
                 </div>
               </div>
             </div>
@@ -105,44 +104,49 @@ const CreatPostUser = ({ id }) => {
             {menue && (
               <div
                 onClick={() => setmenue(false)}
-                className="fixed z-50 bg-[#282830e8] inset-0 backdrop-blur-sm "
+                className="fixed z-50 inset-0 bg-white/30 backdrop-blur-sm"
               >
                 <div className="flex justify-center items-center h-screen ">
                   <div
                     onClick={(e) => e.stopPropagation()}
-                    className="bg-black/40 border-2  border-gray-600  w-[450px] rounded-md relative"
+                    className="bg-white/80 backdrop-blur-xl border border-gray-200 w-[450px] rounded-2xl relative shadow-xl"
                   >
                     <FaXmark
                       onClick={() => setmenue(false)}
-                      className="text-3xl text-gray-600 bg-gray-400 rounded-full  absolute top-6 left-3 cursor-pointer"
+                      className="text-2xl text-gray-500 bg-white rounded-full absolute top-4 left-4 cursor-pointer p-1 shadow-md"
                     />
-                    <h3 className="text-center text-xl border-b-2 border-gray-400 py-3 mt-3 text-white font-semibold">
+
+                    <h3 className="text-center text-[18px] border-b border-gray-200 py-3 mt-2 text-gray-800 font-semibold">
                       Create a post
                     </h3>
-                    <div className="mt-5 px-3 py-3 text-white flex items-center gap-3">
+
+                    <div className="mt-4 px-4 py-3 text-gray-800 flex items-center gap-3">
                       <div>
                         {profile?.avatar_url ? (
                           <img
                             src={profile.avatar_url}
-                            className="size-15 object-cover mb-3 rounded-full w-[100px] h-[100px]   "
+                            className="object-cover rounded-full w-[60px] h-[60px]"
                           />
                         ) : (
-                          <IoPersonCircle className="text-3xl w-[100px] h-[100px]" />
-                        )}{" "}
+                          <IoPersonCircle className="text-4xl w-[60px] h-[60px] text-gray-400" />
+                        )}
                       </div>
-                      <div className="text-xl font-semibold ">
+
+                      <div className="text-[15px] font-medium">
                         {profile?.username}
                       </div>
                     </div>
+
                     <div className="flex flex-col min-h-[200px]">
                       <input
                         type="text"
                         value={inputvalue}
                         onChange={(e) => setinputvalue(e.target.value)}
                         placeholder="What are you thinking?"
-                        className="px-4 py-5 text-gray-200 outline-none"
+                        className="px-4 py-4 text-gray-700 outline-none placeholder-gray-400"
                       />
-                      <div className="mb-5   ">
+
+                      <div className="mb-5">
                         {preview.length > 0 && (
                           <div className="grid grid-cols-2 gap-3 overflow-y-auto max-h-60 px-5 mt-3">
                             {preview.map((item, index) => (
@@ -153,30 +157,34 @@ const CreatPostUser = ({ id }) => {
                                       prev.filter((_, i) => i !== index),
                                     )
                                   }
-                                  className="absolute z-50 top-1 left-1 text-2xl bg-black/70 text-white rounded-full p-1 cursor-pointer"
+                                  className="absolute z-50 top-1 left-1 text-xl bg-black/70 text-white rounded-full p-1 cursor-pointer"
                                 />
+
                                 {item.file.type.startsWith("image/") && (
                                   <img
                                     src={item.url}
-                                    className="rounded-md w-full object-cover border border-gray-500"
+                                    className="rounded-xl w-full object-cover border border-gray-200"
                                   />
                                 )}
+
                                 {item.file.type.startsWith("video/") && (
-                                  <div>
-                                    <video
-                                      className="rounded-md "
-                                      src={item.url}
-                                      controls
-                                    />
-                                  </div>
+                                  <video
+                                    className="rounded-xl"
+                                    src={item.url}
+                                    controls
+                                  />
                                 )}
                               </div>
                             ))}
                           </div>
                         )}
                       </div>
-                      <div className="mt-auto mb-5 mx-3 px-6 py-5 flex justify-between border-2 border-gray-500 rounded-2xl  ">
-                        <p className="text-white text-xl"> Add to your post</p>
+
+                      <div className="mt-auto mb-5 mx-3 px-5 py-4 flex justify-between border border-gray-200 rounded-xl bg-gray-50">
+                        <p className="text-gray-700 text-[15px]">
+                          Add to your post
+                        </p>
+
                         <input
                           type="file"
                           multiple
@@ -185,18 +193,16 @@ const CreatPostUser = ({ id }) => {
                           accept="image/*,video/*"
                           onChange={handelchange}
                         />
+
                         <div onClick={handelclick}>
-                          <FaImages className="text-green-400 text-3xl cursor-pointer" />
+                          <FaImages className="text-green-500 text-2xl cursor-pointer" />
                         </div>
                       </div>
-                      {/* upload */}
+
                       <button
                         onClick={handelupload}
-                        disabled={
-                          (!inputvalue.trim() && preview.length === 0) ||
-                          loading
-                        }
-                        className={`text-white hover:bg-blue-400 cursor-pointer  bg-blue-500 mx-5 rounded-md my-5 py-2  disabled:cursor-no-drop disabled:bg-[#3b3d3e]    disabled:opacity-80`}
+                        disabled={!inputvalue.trim() && preview.length === 0}
+                        className="text-white bg-blue-500 hover:bg-blue-600 cursor-pointer mx-5 rounded-xl my-5 py-2 text-sm transition-all duration-200 disabled:cursor-no-drop disabled:bg-gray-300 disabled:text-gray-500"
                       >
                         Upload
                       </button>

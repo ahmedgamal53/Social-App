@@ -128,101 +128,114 @@ const Profile = () => {
 
   return (
     <div onClick={() => setmenu(false)} className=" h-screen">
-      <div className="bg-[#252728] flex justify-around items-center  p-10">
-        <div className="flex items-center gap-3 justify-center ">
-          <div className="text-white relative ">
+      <div className="bg-[#2a2a2a] border-b border-gray-700 px-6 py-6 flex items-center justify-between">
+        {/* left */}
+        <div className="flex items-center gap-5">
+          {/* avatar */}
+          <div className="relative">
             <div
               onClick={handelmenue}
-              disabled={uploading}
               className={isOwner ? "cursor-pointer" : ""}
             >
               {profileData?.avatar_url ? (
                 <img
                   src={profileData.avatar_url}
-                  className="size-15 object-cover mb-3 rounded-full w-[100px] h-[100px]   "
+                  className="w-[90px] h-[90px] rounded-full object-cover border-2 border-gray-600"
                 />
               ) : (
-                <IoPersonCircle className="text-3xl w-[100px] h-[100px]" />
+                <IoPersonCircle className="w-[90px] h-[90px] text-gray-400" />
               )}
+
+              {/* camera icon */}
               {isOwner && (
-                <div className="rounded-2xl absolute bottom-1 left-0 bg-[#2f2d2d] w-[30px] h-[30px] flex justify-center items-center p-2">
-                  <FaCamera />
+                <div className="absolute bottom-0 right-0 bg-gray-800 border border-gray-600 w-[32px] h-[32px] flex items-center justify-center rounded-full">
+                  <FaCamera className="text-white text-sm" />
                 </div>
               )}
             </div>
-            <div className="">
-              {isOwner && menu && (
+
+            {isOwner && menu && (
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="absolute top-[100%] mt-2 left-0 bg-[#2a2a2a] border border-gray-700 rounded-xl w-[220px] shadow-xl p-2 z-50"
+              >
                 <div
-                  onClick={(e) => e.stopPropagation()}
-                  className="absolute flex flex-col gap-2 bg-[#252728] p-2 rounded-md w-[250px]"
+                  className="flex items-center gap-2 px-3 py-2 hover:bg-gray-700 rounded-lg cursor-pointer"
+                  onClick={handelPecture}
                 >
-                  <div
-                    className="flex items-center gap-2 cursor-pointer font-bold"
-                    onClick={handelPecture}
-                  >
-                    <BsPersonBadge className="text-xl" />
-                    <span>View profile picture</span>
-                  </div>
-                  <input
-                    type="file"
-                    className="hidden"
-                    ref={fileinputref}
-                    accept="image/*"
-                    onChange={handelchange}
-                  />
-                  <div
-                    onClick={() => fileinputref.current.click()}
-                    className="flex cursor-pointer items-center gap-2 font-bold"
-                  >
-                    <HiMiniPhoto className="text-xl" />
-                    <span>Choosing a profile picture</span>
-                  </div>
+                  <BsPersonBadge className="text-lg" />
+                  <span className="text-white text-sm">
+                    View profile picture
+                  </span>
                 </div>
-              )}
-            </div>
+
+                <input
+                  type="file"
+                  className="hidden"
+                  ref={fileinputref}
+                  accept="image/*"
+                  onChange={handelchange}
+                />
+
+                <div
+                  onClick={() => fileinputref.current.click()}
+                  className="flex items-center gap-2 px-3 py-2 hover:bg-gray-700 rounded-lg cursor-pointer"
+                >
+                  <HiMiniPhoto className="text-lg" />
+                  <span className="text-white text-sm">
+                    Choose profile picture
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
+
           <div>
             {isOwner && editeUserName ? (
-              <div className="flex  flex-col gap-2 items-center">
+              <div className="flex flex-col gap-3">
                 <input
                   value={inputusername}
                   onChange={(e) => setinputusername(e.target.value)}
-                  className="bg-[#3B3D3E] px-3 py-2 rounded-2xl outline-none text-white"
+                  className="bg-gray-800 px-4 py-2 rounded-lg outline-none text-white border border-gray-600"
                   type="text"
                 />
-                <div className="flex  gap-5">
+
+                <div className="flex gap-3">
                   <button
                     onClick={canseledite}
-                    className="bg-[#3B3D3E] px-3 py-2 rounded-md text-white cursor-pointer"
+                    className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg text-white text-sm"
                   >
-                    cancel
+                    Cancel
                   </button>
+
                   <button
                     onClick={handelSaveUsername}
                     disabled={!inputusername.trim()}
-                    className="bg-[#3B3D3E] px-3 py-2 rounded-md disabled:cursor-no-drop disabled:opacity-50 text-white cursor-pointer"
+                    className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg text-white text-sm disabled:opacity-50"
                   >
-                    save
+                    Save
                   </button>
                 </div>
               </div>
             ) : (
-              <h2 className="text-white absolute">{profileData?.username}</h2>
+              <h2 className="text-white text-2xl font-semibold">
+                {profileData?.username}
+              </h2>
             )}
           </div>
         </div>
+
         {isOwner && (
-          <div
+          <button
             onClick={handelEdite}
-            className="text-white flex justify-center items-center gap-2 bg-[#3B3D3E] px-3 py-2 rounded-md cursor-pointer"
+            className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg text-white text-sm transition"
           >
             Edit profile
-            <span>
-              <MdEdit />
-            </span>
-          </div>
+            <MdEdit />
+          </button>
         )}
       </div>
+
       {uploading ? (
         <div className="fixed flex justify-center items-center h-screen inset-0 bg-black/10">
           <div className="">

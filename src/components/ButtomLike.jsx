@@ -34,15 +34,17 @@ const ButtomLike = ({ post }) => {
   return (
     <div
       onClick={handelLike}
-      className="flex active:scale-95 items-center hover:bg-[#b0b3b8] transition-all duration-200 gap-2 px-8 py-1 rounded-md cursor-pointer"
+      className="flex items-center gap-2 px-4 py-2 rounded-xl cursor-pointer text-gray-600 hover:bg-gray-100 active:scale-95 transition-all duration-200"
     >
       {isLiked ? (
-        <AiFillLike className="text-2xl text-blue-500" />
+        <AiFillLike className="text-xl text-blue-500" />
       ) : (
-        <AiOutlineLike className="text-2xl" />
+        <AiOutlineLike className="text-xl" />
       )}
 
-      <p className={isLiked ? "text-blue-500" : ""}>Like</p>
+      <span className={`text-sm font-medium ${isLiked ? "text-blue-500" : ""}`}>
+        Like
+      </span>
     </div>
   );
 };

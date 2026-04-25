@@ -25,7 +25,7 @@ const Sidebar = () => {
         <img src={logo} className="size-17" />
         <h2 className="font-semibold text-xl">Social App</h2>
       </div>
-      <div className="bg-blue-500/90 shadow-2xl  h-screen w-[200px]">
+      <div className="bg-white/60 backdrop-blur-2xl shadow-2xl border border-white/40 h-screen w-[200px]">
         <div className="pt-5 px-5">
           <div className="flex items-center gap-3  ">
             {profile?.avatar_url ? (
@@ -37,8 +37,8 @@ const Sidebar = () => {
               <IoPersonCircle className="text-3xl" />
             )}
             {!loading ? (
-              <span className="text-white">
-                {/* {session?.user?.user_metadata?.username} */}
+              <span className="text-gray-800 font-semibold text-[15px]">
+                {" "}
                 {profile?.username}
               </span>
             ) : (
@@ -50,10 +50,14 @@ const Sidebar = () => {
               <NavLink
                 to={"/home"}
                 className={({ isActive }) =>
-                  `${isActive ? "bg-blue-300" : null} flex items-center gap-3 text-white text-xl rounded-md px-2 py-1`
+                  `${
+                    isActive
+                      ? "bg-blue-100 text-blue-600 shadow-md"
+                      : "text-gray-600 hover:bg-gray-100"
+                  } flex items-center gap-3 text-[15px] font-medium rounded-xl px-3 py-2 transition-all duration-200`
                 }
               >
-                <IoMdHome />
+                <IoMdHome className="text-lg" />
                 <li>Home</li>
               </NavLink>
             </ul>
@@ -61,7 +65,11 @@ const Sidebar = () => {
               <NavLink
                 to={`/profile/${profile?.id}`}
                 className={({ isActive }) =>
-                  `${isActive ? "bg-blue-300" : null} flex items-center gap-3 text-white text-xl rounded-md px-2 py-1`
+                  `${
+                    isActive
+                      ? "bg-blue-100 text-blue-600 shadow-md"
+                      : "text-gray-600 hover:bg-gray-100"
+                  } flex items-center gap-3 text-[15px] font-medium rounded-xl px-3 py-2 transition-all duration-200`
                 }
               >
                 <IoPerson />
@@ -72,7 +80,11 @@ const Sidebar = () => {
               <NavLink
                 to={"/notifications"}
                 className={({ isActive }) =>
-                  `${isActive ? "bg-blue-300" : null} flex items-center gap-3 text-white text-xl rounded-md px-2 py-1`
+                  `${
+                    isActive
+                      ? "bg-blue-100 text-blue-600 shadow-md"
+                      : "text-gray-600 hover:bg-gray-100"
+                  } flex items-center gap-3 text-[15px] font-medium rounded-xl px-3 py-2 transition-all duration-200`
                 }
               >
                 <div className="relative">
@@ -88,9 +100,9 @@ const Sidebar = () => {
             </ul>
             <button
               onClick={handleLogout}
-              className={` cursor-pointer flex items-center gap-3 text-white text-xl rounded-md px-2 py-1`}
+              className="cursor-pointer flex items-center gap-3 text-[15px] font-medium text-gray-600 hover:bg-gray-100 rounded-xl px-3 py-2 transition-all duration-200"
             >
-              <FiLogOut />
+              <FiLogOut className="text-[20px]" />
               <p>log out</p>
             </button>
           </nav>

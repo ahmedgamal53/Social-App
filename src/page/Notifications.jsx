@@ -18,21 +18,43 @@ const Notifications = () => {
             navigate(`/profile/${notif.user_id}`);
           }}
           key={notif.id}
-          className={`flex items-center cursor-pointer gap-3 p-3 rounded-md ${!notif.is_read ? "bg-blue-500/20" : "bg-[#252728]"}`}
+          className={`
+        flex items-center gap-4 cursor-pointer
+        p-4 rounded-xl transition-all duration-300
+
+        backdrop-blur-md 
+
+       ${
+         !notif.is_read
+           ? "bg-blue-500/15   shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+           : "bg-white/50 hover:bg-white/70 shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+       }
+      `}
         >
           <img
             src={notif.sender?.avatar_url}
-            className="w-[50px] h-[50px] rounded-full object-cover"
+            className="w-[48px] h-[48px] rounded-full object-cover border border-white/20"
           />
-          <div className="text-white">
-            <span className="font-bold">{notif.sender?.username}</span>
-            {notif.type === "like"
-              ? " liked your post"
-              : " commented on your post"}
-            <div className="text-gray-400 text-sm">
+
+          {/* text */}
+          <div className="flex flex-col text-gray-900">
+            <span className="text-sm">
+              <span className="font-semibold text-black">
+                {notif.sender?.username}
+              </span>{" "}
+              {notif.type === "like"
+                ? "liked your post"
+                : "commented on your post"}
+            </span>
+
+            <span className="text-gray-600 text-xs mt-1">
               {dayjs(notif.created_at).fromNow()}
-            </div>
+            </span>
           </div>
+
+          {!notif.is_read && (
+            <div className="ml-auto w-2 h-2 bg-blue-400 rounded-full"></div>
+          )}
         </div>
       ))}
     </div>

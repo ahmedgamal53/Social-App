@@ -26,70 +26,62 @@ const Login = () => {
     setLoading(false);
   };
   return (
-    <div className="flex bg-linear-to-r from-[#484747d1] to-[#070707f4] justify-center items-center h-screen ">
-      <div className="bg-white p-5 rounded-md w-[500px] ">
-        <h1 className="font-semibold text-center text-2xl mb-10">Sign In</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1f1f23] via-[#2a2a2e] to-[#1a1a1d]">
+      <div className="w-[420px] bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-8 border border-white/40">
+        <h1 className="text-2xl font-semibold text-center text-gray-900 mb-8">
+          Welcome Back
+        </h1>
 
-        <div>
-          <form
-            onSubmit={handleLogin}
-            action=""
-            className="flex flex-col gap-5 "
-          >
-            <div className="flex  items-center relative ">
-              <span className="text-gray-500 left-2 text-xl absolute">
-                <IoMdMail />
-              </span>
-              <input
-                type="email"
-                placeholder="Email"
-                required
-                value={email}
-                onChange={(e) => setemail(e.target.value)}
-                className="bg-white w-full border-2 border-gray-400 rounded-md px-8 py-2 outline-none"
-              ></input>
-            </div>
-            <div className="flex items-center relative ">
-              <span className="text-gray-500 left-2 text-xl absolute">
-                <IoIosLock />
-              </span>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setpassword(e.target.value)}
-                placeholder="password"
-                className="bg-white w-full border-2 border-gray-400 rounded-md px-8 py-2 outline-none"
-              />
-            </div>
-            <div>
-              <button
-                disabled={loading}
-                className="bg-blue-400 text-white mt-5 rounded-md w-full px-3 py-2 cursor-pointer disabled:cursor-no-drop hover:bg-blue-500 transition-all duration-400 outline-none active:scale-95"
-              >
-                {loading ? "Signing in..." : "Sign in"}
-              </button>
-              {/* {error && <p className="text-red-500 text-sm">{error} </p>} */}
-            </div>
-          </form>
-        </div>
-        <div className="text-center mt-5 text-2xl">
-          <p className="">--Or--</p>
-        </div>
-        <div className=" flex felx-col justify-center ">
-          <button
-            onClick={() => navigate("/register")}
-            className="mt-5 bg-blue-500 text-white px-6 py-3 cursor-pointer rounded-md "
-          >
-            Register
-          </button>
-        </div>
-      </div>
-      {loading && (
-        <div className="fixed flex justify-center items-center h-screen inset-0 bg-black/10">
-          <div className="">
-            <BeatLoader color="#3498db" size={15} />
+        <form onSubmit={handleLogin} className="flex flex-col gap-5">
+          <div className="relative">
+            <IoMdMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg" />
+            <input
+              type="email"
+              placeholder="Email"
+              required
+              value={email}
+              onChange={(e) => setemail(e.target.value)}
+              className="w-full bg-white border border-gray-300 focus:border-blue-100 focus:ring-2 focus:ring-blue-200 rounded-lg pl-10 pr-3 py-2 outline-none transition"
+            />
           </div>
+
+          <div className="relative">
+            <IoIosLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg" />
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setpassword(e.target.value)}
+              placeholder="Password"
+              className="w-full bg-white border border-gray-300 focus:border-blue-100 focus:ring-2 focus:ring-blue-200 rounded-lg pl-10 pr-3 py-2 outline-none transition"
+            />
+          </div>
+
+          <button
+            disabled={loading}
+            className="mt-3 bg-blue-600 hover:bg-blue-500 text-white rounded-lg py-2 transition active:scale-95 disabled:opacity-50"
+          >
+            {loading ? "Signing in..." : "Sign in"}
+          </button>
+        </form>
+
+        <div className="flex items-center gap-3 my-6">
+          <div className="flex-1 h-[1px] bg-gray-300"></div>
+          <span className="text-gray-500 text-sm">OR</span>
+          <div className="flex-1 h-[1px] bg-gray-300"></div>
+        </div>
+
+        <button
+          onClick={() => navigate("/register")}
+          className="w-full border border-gray-300 hover:bg-gray-100 text-gray-800 rounded-lg py-2 transition"
+        >
+          Create account
+        </button>
+      </div>
+
+      {loading && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black/20 backdrop-blur-sm">
+          <BeatLoader color="#3b82f6" size={12} />
         </div>
       )}
     </div>
