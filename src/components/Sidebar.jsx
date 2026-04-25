@@ -1,5 +1,5 @@
 import { IoPersonCircle } from "react-icons/io5";
-import logo from "../assets/ChatGPT Image Feb 3, 2026, 09_56_57 PM.png";
+import logo from "../assets/logo.png";
 import { NavLink } from "react-router-dom";
 import { IoMdHome } from "react-icons/io";
 import { IoPerson } from "react-icons/io5";
