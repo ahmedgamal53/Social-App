@@ -236,12 +236,7 @@ const Home = () => {
                 </div>
               )}
             </div>
-            {!filteredPosts ||
-              (filteredPosts.length === 0 && (
-                <div className="flex justify-center items-center mt-10 text-gray-500">
-                  No Posts
-                </div>
-              ))}
+
             <UserPosts posts={filteredPosts} />
           </div>
         </div>

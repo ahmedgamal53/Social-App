@@ -3,6 +3,8 @@ import { useMarkAsRead, useNotifications } from "../api/posts/Notifications";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useNavigate } from "react-router-dom";
+import { IoPersonCircle } from "react-icons/io5";
+
 dayjs.extend(relativeTime);
 const Notifications = () => {
   const { data: notifications } = useNotifications();
@@ -31,10 +33,14 @@ const Notifications = () => {
        }
       `}
         >
-          <img
-            src={notif.sender?.avatar_url}
-            className="w-[48px] h-[48px] rounded-full object-cover border border-white/20"
-          />
+          {notif.sender?.avatar_url ? (
+            <img
+              src={notif.sender?.avatar_url}
+              className="w-[48px] h-[48px] rounded-full object-cover border border-white/20"
+            />
+          ) : (
+            <IoPersonCircle className="w-[48px] h-[48px] text-gray-400" />
+          )}
 
           {/* text */}
           <div className="flex flex-col text-gray-900">
