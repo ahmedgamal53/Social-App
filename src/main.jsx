@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import AuthProvider from "./context/AuthProvider.jsx";
 import QueryProvider from "./context/QueryProvider.jsx";
+
 QueryProvider;
 createRoot(document.getElementById("root")).render(
   <StrictMode>

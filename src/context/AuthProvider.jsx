@@ -13,46 +13,78 @@ const AuthProvider = ({ children }) => {
   const [loading, setloading] = useState(true);
   const [profile, setprofile] = useState(null);
   const initialized = useRef(false);
+
+  const fetchProfile = async (userId) => {
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .single();
+    return data;
+  };
+
   useEffect(() => {
     const fetchsession = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
+
       setsession(session);
+
       if (session?.user) {
-        const { data } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", session.user.id)
-          .single();
+        const data = await fetchProfile(session.user.id);
         setprofile(data);
       }
 
       setloading(false);
       initialized.current = true;
     };
+
     fetchsession();
+
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!initialized.current) return;
-        setsession(session);
-        if (session?.user) {
-          const { data } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", session.user.id)
-            .single();
-          setprofile(data);
-        } else {
+
+        if (event === "SIGNED_OUT") {
+          setsession(null);
           setprofile(null);
+          setloading(false);
+          return;
+        }
+
+        if (session?.user) {
+          setsession(session);
+          const data = await fetchProfile(session.user.id);
+          setprofile(data);
         }
 
         setloading(false);
       },
     );
+
     return () => {
       listener.subscription.unsubscribe();
     };
+  }, []);
+
+  useEffect(() => {
+    const handleVisibility = async () => {
+      if (document.visibilityState === "visible") {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (session?.user) {
+          setsession(session);
+          const data = await fetchProfile(session.user.id);
+          setprofile(data);
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibility);
   }, []);
 
   useEffect(() => {
