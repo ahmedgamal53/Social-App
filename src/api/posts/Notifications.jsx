@@ -17,7 +17,7 @@ export const useNotifications = () => {
           is_read,
           created_at,
           post_id,
-           user_id, 
+          user_id, 
           sender:sender_id (
             username,
             avatar_url
@@ -50,7 +50,7 @@ export const useInsertNotification = () => {
       return notification;
     },
     onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ["notifications"] }); // ✅
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 };

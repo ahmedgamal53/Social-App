@@ -7,11 +7,9 @@ import QueryProvider from "./context/QueryProvider.jsx";
 
 QueryProvider;
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <AuthProvider>
-      <QueryProvider>
-        <App />
-      </QueryProvider>
-    </AuthProvider>
-  </StrictMode>,
+  <AuthProvider>
+    <QueryProvider>
+      <App />
+    </QueryProvider>
+  </AuthProvider>,
 );
