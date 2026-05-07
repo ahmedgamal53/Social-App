@@ -62,7 +62,7 @@ const Comments = ({
       <div
         onClick={(e) => e.stopPropagation()}
         className="
-      w-xl relative md:w-2xl h-[600px]
+       relative md:w-2xl  w-[350px]  h-[600px]
       overflow-y-auto overflow-x-hidden rounded-2xl
       custom-scroll flex flex-col
 

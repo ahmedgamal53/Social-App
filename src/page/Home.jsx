@@ -141,14 +141,14 @@ const Home = () => {
                 className="md:hidden cursor-pointer"
               >
                 <div className="flex justify-center   items-center    ">
-                  <img src={logo} className="size-17" />
-                  <h2 className="font-semibold text-xl">Social App</h2>
+                  <img src={logo} className="size-12" />
+                  <h2 className="font-semibold ">Social App</h2>
                 </div>
               </div>
               {/* search */}
               <div className="  ">
                 <div className="p-3 flex justify-center items-center">
-                  <div className="flex items-center relative w-[250px] md:w-[450px]">
+                  <div className="flex items-center relative w-[180px] md:w-[450px]">
                     <FaSearch className="text-gray-400 absolute left-3 text-sm" />
                     <input
                       type="search"
@@ -250,7 +250,7 @@ const Home = () => {
           </div>
           <div className="m-5 ml-15   flex justify-center items-center flex-col ">
             <div>
-              <div className="bg-white/80 backdrop-blur-xl shadow-md border border-gray-200 rounded-2xl w-[450px] lg:w-xl">
+              <div className="bg-white/80 backdrop-blur-xl shadow-md border border-gray-200 rounded-2xl w-[300px] lg:w-xl">
                 <h3 className="border-b border-gray-200 py-3 px-4 font-semibold text-[18px] text-gray-800">
                   Create Post
                 </h3>
@@ -278,7 +278,7 @@ const Home = () => {
                   <div className="flex justify-center items-center h-screen ">
                     <div
                       onClick={(e) => e.stopPropagation()}
-                      className="bg-white/80 backdrop-blur-xl border border-gray-200 w-[450px] rounded-2xl relative shadow-xl"
+                      className="bg-white/80 backdrop-blur-xl border border-gray-200 md:w-[450px] w-[300px] rounded-2xl relative shadow-xl"
                     >
                       <FaXmark
                         onClick={() => setmenue(false)}
