@@ -14,6 +14,7 @@ import Home from "./Home.jsx";
 import CreatPostUser from "../components/CreatPostsUser.jsx";
 import { useParams } from "react-router-dom";
 import imageCompression from "browser-image-compression";
+
 const Profile = () => {
   const { id } = useParams();
 

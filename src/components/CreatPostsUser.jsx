@@ -100,7 +100,7 @@ const CreatPostUser = ({ id }) => {
         <div className="m-5 ml-15   flex justify-center items-center flex-col ">
           {isOwner && (
             <div>
-              <div className="bg-white/80 backdrop-blur-xl shadow-md border border-gray-200 rounded-2xl w-xl">
+              <div className="bg-white/80 backdrop-blur-xl shadow-md border border-gray-200 rounded-2xl w-[450px] lg:w-xl">
                 <h3 className="border-b border-gray-200 py-3 px-4 font-semibold text-[18px] text-gray-800">
                   Create Post
                 </h3>

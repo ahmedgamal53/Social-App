@@ -12,9 +12,19 @@ import UserPosts from "../components/UserPosts";
 import { supabase } from "../supabaseClient.js";
 import { FaSearch } from "react-icons/fa";
 import imageCompression from "browser-image-compression";
+import logo from "../assets/logo.png";
+import { useNavigate } from "react-router-dom";
+import { IoMdHome } from "react-icons/io";
+import { IoPerson } from "react-icons/io5";
+import { FiLogOut } from "react-icons/fi";
+import { NavLink } from "react-router-dom";
+
+import { RiNotificationFill } from "react-icons/ri";
+import { useNotifications } from "../api/posts/Notifications.jsx";
 const Home = () => {
   const { data: allPosts, isLoading } = usePosts();
   const { mutate: insertPost } = useInsertPost();
+  const navigate = useNavigate();
 
   const { loading, profile, setloading } = useAuth();
   const [menue, setmenue] = useState(false);
@@ -22,6 +32,14 @@ const Home = () => {
   const [inputvalue, setinputvalue] = useState("");
   const [search, setSearch] = useState("");
   const fileinputref = useRef();
+  const [menuprofile, setmenuprofile] = useState(false);
+
+  const { data: notifications } = useNotifications();
+  const unreadCount = notifications?.filter((n) => !n.is_read).length;
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
 
   const handelclick = () => {
     fileinputref.current.click();
@@ -109,24 +127,130 @@ const Home = () => {
   return (
     <div>
       {!loading ? (
-        <div>
-          <div className="top-0 sticky z-40 bg-white/60 backdrop-blur-2xl shadow-md border border-white/40  ">
-            <div className="p-3 flex justify-center items-center">
-              <div className="flex items-center relative w-[450px]">
-                <FaSearch className="text-gray-400 absolute left-3 text-sm" />
-                <input
-                  type="search"
-                  placeholder="Search..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full bg-white/40 border border-transparent pl-9 pr-3 py-2 outline-none rounded-xl text-sm text-gray-700 placeholder-gray-400 focus:bg-white/70 focus:ring-2 focus:ring-blue-100 transition-all duration-200"
-                />
+        <div onClick={() => setmenuprofile(false)}>
+          {/* logo */}
+          <div className="flex justify-around  items-center md:block top-0 sticky z-40 bg-white/60 backdrop-blur-2xl shadow-md border border-white/40 w-full ">
+            <div className="flex  items-center md:block  ">
+              <div
+                onClick={() =>
+                  window.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                  })
+                }
+                className="md:hidden cursor-pointer"
+              >
+                <div className="flex justify-center   items-center    ">
+                  <img src={logo} className="size-17" />
+                  <h2 className="font-semibold text-xl">Social App</h2>
+                </div>
               </div>
+              {/* search */}
+              <div className="  ">
+                <div className="p-3 flex justify-center items-center">
+                  <div className="flex items-center relative w-[250px] md:w-[450px]">
+                    <FaSearch className="text-gray-400 absolute left-3 text-sm" />
+                    <input
+                      type="search"
+                      placeholder="Search..."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      className="w-full bg-white/40 border border-transparent pl-9 pr-3 py-2 outline-none rounded-xl text-sm text-gray-700 placeholder-gray-400 focus:bg-white/70 focus:ring-2 focus:ring-blue-100 transition-all duration-200"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              onClick={(e) => {
+                setmenuprofile(!menuprofile);
+                e.stopPropagation();
+              }}
+              className="md:hidden relative"
+            >
+              <div>
+                {profile?.avatar_url ? (
+                  <img
+                    src={profile?.avatar_url}
+                    className="size-13 object-cover mb-3 rounded-full cursor-pointer   "
+                  />
+                ) : (
+                  <IoPersonCircle className="text-3xl" />
+                )}
+              </div>
+              {menuprofile && (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="absolute top-15 right-0 w-[140px] bg-white/50 backdrop-blur-2xl border border-white/20 rounded-xl shadow-xl p-2 flex flex-col gap-1 z-150"
+                >
+                  <nav className="mt-5 flex flex-col gap-5">
+                    <ul>
+                      <NavLink
+                        to={"/home"}
+                        className={({ isActive }) =>
+                          `${
+                            isActive
+                              ? "bg-blue-100 text-blue-600 shadow-md"
+                              : "text-gray-600 hover:bg-gray-100"
+                          } flex items-center gap-3 text-[15px] font-medium rounded-xl px-3 py-2 transition-all duration-200`
+                        }
+                      >
+                        <IoMdHome className="text-lg" />
+                        <li>Home</li>
+                      </NavLink>
+                    </ul>
+                    <ul>
+                      <NavLink
+                        to={`/profile/${profile?.id}`}
+                        className={({ isActive }) =>
+                          `${
+                            isActive
+                              ? "bg-blue-100 text-blue-600 shadow-md"
+                              : "text-gray-600 hover:bg-gray-100"
+                          } flex items-center gap-3 text-[15px] font-medium rounded-xl px-3 py-2 transition-all duration-200`
+                        }
+                      >
+                        <IoPerson />
+                        <li>profile</li>
+                      </NavLink>
+                    </ul>
+                    <ul>
+                      <NavLink
+                        to={"/notifications"}
+                        className={({ isActive }) =>
+                          `${
+                            isActive
+                              ? "bg-blue-100 text-blue-600 shadow-md"
+                              : "text-gray-600 hover:bg-gray-100"
+                          } flex items-center gap-3 text-[15px] font-medium rounded-xl px-3 py-2 transition-all duration-200`
+                        }
+                      >
+                        <div className="relative">
+                          <RiNotificationFill />
+                          {unreadCount > 0 && (
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                              {unreadCount}
+                            </span>
+                          )}
+                        </div>
+                        <li>Notifications</li>
+                      </NavLink>
+                    </ul>
+                    <button
+                      onClick={handleLogout}
+                      className="cursor-pointer flex items-center gap-3 text-[15px] font-medium text-gray-600 hover:bg-gray-100 rounded-xl px-3 py-2 transition-all duration-200"
+                    >
+                      <FiLogOut className="text-[20px]" />
+                      <p>log out</p>
+                    </button>
+                  </nav>
+                </div>
+              )}
             </div>
           </div>
           <div className="m-5 ml-15   flex justify-center items-center flex-col ">
             <div>
-              <div className="bg-white/80 backdrop-blur-xl shadow-md border border-gray-200 rounded-2xl w-xl">
+              <div className="bg-white/80 backdrop-blur-xl shadow-md border border-gray-200 rounded-2xl w-[450px] lg:w-xl">
                 <h3 className="border-b border-gray-200 py-3 px-4 font-semibold text-[18px] text-gray-800">
                   Create Post
                 </h3>

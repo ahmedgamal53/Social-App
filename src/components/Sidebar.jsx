@@ -15,12 +15,11 @@ const Sidebar = () => {
   const unreadCount = notifications?.filter((n) => !n.is_read).length;
   const { profile, loading } = useAuth();
 
-  console.log("INSIDE COMPONENT:", profile);
   const handleLogout = async () => {
     await supabase.auth.signOut();
   };
   return (
-    <div className="fixed">
+    <div className="fixed hidden md:block">
       <div className="flex justify-center   items-center  border-r-2 border-r-gray-400   ">
         <img src={logo} className="size-17" />
         <h2 className="font-semibold text-xl">Social App</h2>

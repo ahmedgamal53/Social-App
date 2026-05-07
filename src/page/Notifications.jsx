@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useNavigate } from "react-router-dom";
 import { IoPersonCircle } from "react-icons/io5";
-
+import { FaArrowLeft } from "react-icons/fa";
 dayjs.extend(relativeTime);
 const Notifications = () => {
   const { data: notifications } = useNotifications();
@@ -12,6 +12,12 @@ const Notifications = () => {
   const navigate = useNavigate();
   return (
     <div className="flex flex-col gap-3 p-5">
+      <div
+        onClick={() => navigate(-1)}
+        className="md:hidden bg-white/50 backdrop-blur-2xl border border-white/20 rounded-xl shadow-xl px-5 py-2 text-xl w-fit cursor-pointer duration-200 text-slate-700 hover:text-slate-800"
+      >
+        <FaArrowLeft />
+      </div>
       {notifications?.length > 0 ? (
         notifications?.map((notif) => (
           <div

@@ -45,7 +45,7 @@ const UserPosts = ({ posts, id }) => {
   return (
     <div>
       {posts?.length > 0 ? (
-        <div className="w-xl">
+        <div className="w-[450px] lg:w-xl ">
           {posts?.map((post) => (
             <div
               key={post.id}
