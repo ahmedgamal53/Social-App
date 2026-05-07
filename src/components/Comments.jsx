@@ -62,7 +62,7 @@ const Comments = ({
       <div
         onClick={(e) => e.stopPropagation()}
         className="
-       relative md:w-2xl  w-[350px]  h-[600px]
+       relative md:w-2xl  w-xl h-[600px]
       overflow-y-auto overflow-x-hidden rounded-2xl
       custom-scroll flex flex-col
 
@@ -134,7 +134,7 @@ const Comments = ({
               return (
                 <div
                   key={index}
-                  className=" flex justify-center items-center w-2xl mx-auto"
+                  className=" flex justify-center items-center  md:w-2xl mx-auto"
                 >
                   {isVideo ? (
                     <video src={url} controls className="rounded-xl w-full" />
