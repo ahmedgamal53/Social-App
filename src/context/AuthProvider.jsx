@@ -42,29 +42,29 @@ const AuthProvider = ({ children }) => {
 
     fetchsession();
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (!initialized.current) return;
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!initialized.current) return;
 
-        if (event === "SIGNED_OUT") {
-          setsession(null);
-          setprofile(null);
-          setloading(false);
-          return;
-        }
-
-        if (session?.user) {
-          setsession(session);
-          const data = await fetchProfile(session.user.id);
-          setprofile(data);
-        }
-
+      if (event === "SIGNED_OUT") {
+        setsession(null);
+        setprofile(null);
         setloading(false);
-      },
-    );
+        return;
+      }
+
+      if (session?.user) {
+        setsession(session);
+        const data = await fetchProfile(session.user.id);
+        setprofile(data);
+      } else {
+        setprofile(null);
+      }
+    });
 
     return () => {
-      listener.subscription.unsubscribe();
+      subscription.unsubscribe();
     };
   }, []);
 

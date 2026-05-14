@@ -13,7 +13,6 @@ import { supabase } from "../supabaseClient.js";
 import { FaSearch } from "react-icons/fa";
 import imageCompression from "browser-image-compression";
 import logo from "../assets/logo.png";
-import { useNavigate } from "react-router-dom";
 import { IoMdHome } from "react-icons/io";
 import { IoPerson } from "react-icons/io5";
 import { FiLogOut } from "react-icons/fi";
@@ -24,7 +23,6 @@ import { useNotifications } from "../api/posts/Notifications.jsx";
 const Home = () => {
   const { data: allPosts, isLoading } = usePosts();
   const { mutate: insertPost } = useInsertPost();
-  const navigate = useNavigate();
 
   const { loading, profile, setloading } = useAuth();
   const [menue, setmenue] = useState(false);
