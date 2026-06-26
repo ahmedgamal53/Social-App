@@ -89,7 +89,7 @@ const Home = () => {
   };
   if (isLoading) {
     return (
-      <div className="fixed flex justify-center items-center h-screen inset-0 bg-black/10">
+      <div className="fixed  flex justify-center items-center h-screen inset-0 bg-black/10">
         <div className="">
           <BeatLoader color="#3498db" size={15} />
         </div>

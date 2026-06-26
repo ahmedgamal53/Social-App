@@ -6,8 +6,22 @@ import Profile from "./page/Profile";
 import Register from "./page/Register";
 import Notifications from "./page/Notifications";
 import ProtectedRoute from "./components/ProtectedRoute ";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        window.location.reload();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
