@@ -9,40 +9,27 @@ import ProtectedRoute from "./components/ProtectedRoute ";
 import { useEffect } from "react";
 
 function App() {
-  // useEffect(() => {
-  //   const handleVisibility = () => {
-  //     if (document.visibilityState === "visible") {
-  //       window.location.reload();
-  //     }
-  //   };
+  useEffect(() => {
+    let hiddenAt = 0;
 
-  //   document.addEventListener("visibilitychange", handleVisibility);
+    const handleVisibility = () => {
+      if (document.visibilityState === "hidden") {
+        hiddenAt = Date.now();
+      } else {
+        const elapsed = Date.now() - hiddenAt;
 
-  //   return () => {
-  //     document.removeEventListener("visibilitychange", handleVisibility);
-  //   };
-  // }, []);
-  // useEffect(() => {
-  //   let hiddenAt = 0;
+        if (elapsed > 60 * 1000) {
+          window.location.reload();
+        }
+      }
+    };
 
-  //   const handleVisibility = () => {
-  //     if (document.visibilityState === "hidden") {
-  //       hiddenAt = Date.now();
-  //     } else {
-  //       const elapsed = Date.now() - hiddenAt;
+    document.addEventListener("visibilitychange", handleVisibility);
 
-  //       if (elapsed > 60 * 1000) {
-  //         window.location.reload();
-  //       }
-  //     }
-  //   };
-
-  //   document.addEventListener("visibilitychange", handleVisibility);
-
-  //   return () => {
-  //     document.removeEventListener("visibilitychange", handleVisibility);
-  //   };
-  // }, []);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
