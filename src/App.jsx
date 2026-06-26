@@ -18,7 +18,6 @@ function App() {
       } else {
         const elapsed = Date.now() - hiddenAt;
 
-        // لو الصفحة كانت مختفية أكتر من دقيقة
         if (elapsed > 60 * 1000) {
           window.location.reload();
         }
