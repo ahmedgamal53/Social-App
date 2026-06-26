@@ -9,19 +9,19 @@ import ProtectedRoute from "./components/ProtectedRoute ";
 import { useEffect } from "react";
 
 function App() {
-  useEffect(() => {
-    const handleVisibility = () => {
-      if (document.visibilityState === "visible") {
-        window.location.reload();
-      }
-    };
+  // useEffect(() => {
+  //   const handleVisibility = () => {
+  //     if (document.visibilityState === "visible") {
+  //       window.location.reload();
+  //     }
+  //   };
 
-    document.addEventListener("visibilitychange", handleVisibility);
+  //   document.addEventListener("visibilitychange", handleVisibility);
 
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibility);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener("visibilitychange", handleVisibility);
+  //   };
+  // }, []);
   // useEffect(() => {
   //   let hiddenAt = 0;
 
