@@ -10,9 +10,18 @@ import { useEffect } from "react";
 
 function App() {
   useEffect(() => {
+    let hiddenAt = 0;
+
     const handleVisibility = () => {
-      if (document.visibilityState === "visible") {
-        window.location.reload();
+      if (document.visibilityState === "hidden") {
+        hiddenAt = Date.now();
+      } else {
+        const elapsed = Date.now() - hiddenAt;
+
+        // لو الصفحة كانت مختفية أكتر من دقيقة
+        if (elapsed > 60 * 1000) {
+          window.location.reload();
+        }
       }
     };
 
