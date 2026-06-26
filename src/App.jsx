@@ -10,17 +10,9 @@ import { useEffect } from "react";
 
 function App() {
   useEffect(() => {
-    let hiddenAt = 0;
-
     const handleVisibility = () => {
-      if (document.visibilityState === "hidden") {
-        hiddenAt = Date.now();
-      } else {
-        const elapsed = Date.now() - hiddenAt;
-
-        if (elapsed > 60 * 1000) {
-          window.location.reload();
-        }
+      if (document.visibilityState === "visible") {
+        window.location.reload();
       }
     };
 
@@ -30,6 +22,27 @@ function App() {
       document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, []);
+  // useEffect(() => {
+  //   let hiddenAt = 0;
+
+  //   const handleVisibility = () => {
+  //     if (document.visibilityState === "hidden") {
+  //       hiddenAt = Date.now();
+  //     } else {
+  //       const elapsed = Date.now() - hiddenAt;
+
+  //       if (elapsed > 60 * 1000) {
+  //         window.location.reload();
+  //       }
+  //     }
+  //   };
+
+  //   document.addEventListener("visibilitychange", handleVisibility);
+
+  //   return () => {
+  //     document.removeEventListener("visibilitychange", handleVisibility);
+  //   };
+  // }, []);
   return (
     <BrowserRouter>
       <Routes>
