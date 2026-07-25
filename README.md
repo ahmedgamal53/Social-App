@@ -8,7 +8,7 @@
 
 **Social App** is a full-featured social media web application that allows users to connect, share posts, and interact with each other in real time. Built with React on the frontend and Supabase as a powerful open-source backend — handling auth, database, storage, and real-time subscriptions out of the box.
 
-> 🔗 **Live Demo:** [https://social1app.netlify.app/](https://social1app.netlify.app/)
+> 🔗 **Live Demo:** [https://social-1app.pages.dev/](https://social-1app.pages.dev/)
 
 ---
 
