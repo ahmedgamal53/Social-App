@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://social-1app.pages.dev/"><strong>🔗 Live Demo</strong></a>
 </p>
----
+
 
 ## ✨ Features
 
