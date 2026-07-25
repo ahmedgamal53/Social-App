@@ -9,7 +9,7 @@
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-**[🔗 Live Demo](https://social-1app.pages.dev/) 
+[🔗 Live Demo](https://social-1app.pages.dev/) 
 
 </div>
 
@@ -138,7 +138,6 @@ notifications   id, recipient_id, sender_id, type, post_id, read, created_at
 ## 🗺️ Roadmap
 
 - [ ] Direct messaging between users
-- [ ] Dark mode
 - [ ] Post sharing / reposts
 - [ ] Infinite scroll & pagination
 
@@ -158,13 +157,7 @@ Contributions make the open-source community amazing — any contributions you m
 
 ---
 
-## 📄 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
-
-*(Optional — add a LICENSE file to the repo if you want this section to be accurate)*
-
----
 
 <div align="center">
 
