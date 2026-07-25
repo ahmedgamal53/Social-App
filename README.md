@@ -7,7 +7,8 @@
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-<img src="https://img.shields.io/badge/TanStack%20Query-State-FF4154?style=flat-square&logo=reactquery&logoColor=white" alt="TanStack Query" />
+[![TanStack Query](https://img.shields.io/badge/TanStack%20Query-State-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)](https://tanstack.com/query/latest)
+
 [🔗 Live Demo](https://social-1app.pages.dev/) 
 
 </div>
